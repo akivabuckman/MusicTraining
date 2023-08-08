@@ -1,7 +1,7 @@
 // const express = require('express')
 import express from "express";
 import dotenv from "dotenv";
-import urouter from "./routes/users.js";
+import urouter from "./routes/userRoutes.js";
 import path from "path";
 import cors from "cors";
 import multer from "multer";

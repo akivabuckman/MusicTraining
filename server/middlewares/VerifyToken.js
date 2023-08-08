@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { login } from "../models/users.js";
+import { login } from "../models/userModels.js";
 dotenv.config();
 
 export const verifyToken = (req, res, next) => {
