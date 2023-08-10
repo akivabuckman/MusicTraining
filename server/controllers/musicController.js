@@ -1,4 +1,4 @@
-import {createSongNotes, createUserSong, userSongs, songNotes, userSong, deleteSong } from "../models/userModels.js"
+import {createSongNotes, createUserSong, userSongs, songNotes, userSong, deleteSong, allUserSongs, userSongNotes } from "../models/musicModels.js"
 
 
 
@@ -17,6 +17,7 @@ export const songNotesToDb = async (req, res) => {
   
   export const userSongToDb = async (req, res) => {
     const {user_id, song_length, user_notes} = req.body;
+    console.log(req.body)
     try {
       const newUserSong = await createUserSong(req.body);
       console.log(newUserSong);
@@ -49,8 +50,9 @@ export const songNotesToDb = async (req, res) => {
   
   export const getUserSong = async (req, res) => {
     const song_id = req.params.song_id;
+    const user_id = req.params.user_id;
     try {
-      const song = await userSong(song_id);
+      const song = await userSong(song_id, user_id);
       res.json(song)
     } catch(error) {
       console.log(error)
@@ -74,3 +76,23 @@ export const songNotesToDb = async (req, res) => {
     }
   };
   
+  export const getAllUserSongs = async (req, res) => {
+    const user_id = req.params.user_id;
+
+    try {
+      const songs = await allUserSongs(user_id);
+      res.json(songs)
+    } catch(error) {
+      console.log(error)
+    }
+  };
+
+  export const getUserSongNotes = async (req, res) => {
+    const user_id = req.params.user_id;
+    try {
+      const songNotes = await userSongNotes(user_id);
+      res.json(songNotes)
+    } catch(error) {
+      console.log(error)
+    }
+  }

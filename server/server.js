@@ -2,6 +2,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import urouter from "./routes/userRoutes.js";
+import mrouter from "./routes/musicRoutes.js"
 import path from "path";
 import cors from "cors";
 import multer from "multer";
@@ -27,6 +28,7 @@ app.use(cors());
 app.use("/", express.static(__dirname + "/public"));
 
 app.use("/users", urouter);
+app.use("/music", mrouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`run on port ${process.env.PORT}`);
