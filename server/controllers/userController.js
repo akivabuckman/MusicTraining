@@ -83,4 +83,3 @@ export const _logout = (req, res) => {
   res.clearCookie("token");
   return res.sendStatus(200);
 };
-

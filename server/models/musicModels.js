@@ -1,8 +1,8 @@
 import db from "../config/db.js";
 
-export const createSongNotes = async ({user_id, key, song, correct_count, song_length, song_degrees, user_notes, song_notes, score}) => {
+export const createSongNotes = async ({user_id, key, song, correct_count, song_length, song_degrees, user_notes, song_notes, score, instrument}) => {
     const answer = await db('song_notes_sessions')
-    .insert({user_id, key, song, correct_count, song_length, song_degrees, user_notes, song_notes, score});
+    .insert({user_id, key, song, correct_count, song_length, song_degrees, user_notes, song_notes, score, instrument});
     return answer
 };
 

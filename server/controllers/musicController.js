@@ -3,7 +3,7 @@ import {createSongNotes, createUserSong, userSongs, songNotes, userSong, deleteS
 
 
 export const songNotesToDb = async (req, res) => {
-    const {user_id, key, song, correct_count, song_length, song_degrees, user_notes, song_notes, score} = req.body;
+    const {user_id, key, song, correct_count, song_length, song_degrees, user_notes, song_notes, score, instrument} = req.body;
     console.log("req.body", req.body);
     try {
       const newSongNotes = await createSongNotes(req.body);
