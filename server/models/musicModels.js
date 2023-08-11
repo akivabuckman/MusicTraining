@@ -6,9 +6,9 @@ export const createSongNotes = async ({user_id, key, song, correct_count, song_l
     return answer
 };
 
-export const createUserSong = async ({user_id, song_length, user_notes, song_name}) => {
+export const createUserSong = async ({user_id, song_length, user_notes, song_name, user_times, notes_octaves}) => {
     const answer = await db('user_songs')
-    .insert({user_id, song_length, user_notes, song_name});
+    .insert({user_id, song_length, user_notes, song_name, user_times, notes_octaves});
     return answer 
 };
 

@@ -16,7 +16,7 @@ export const songNotesToDb = async (req, res) => {
   };
   
   export const userSongToDb = async (req, res) => {
-    const {user_id, song_length, user_notes} = req.body;
+    const {user_id, song_length, user_notes, user_times, notes_octaves} = req.body;
     console.log(req.body)
     try {
       const newUserSong = await createUserSong(req.body);
