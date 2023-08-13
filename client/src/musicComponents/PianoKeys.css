@@ -1,0 +1,71 @@
+.toggle {
+    position: relative;
+    width: 40px;
+    height: 20px;
+    border: 2px solid #494949;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.circle {
+    position: absolute;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    background-color: #494949;
+    transition: .3s;
+}
+
+.active {
+    border-color: rgb(85, 227, 180);
+}
+
+.active + .text {
+    color: rgb(85, 227, 180);
+}
+
+.active .circle {
+    left: 100%;
+    transform: translateX(-100%);
+    transition: .3s;
+    background-color: rgb(85, 227, 180);
+}
+
+/* piano */
+.pianoRow {
+    display: flex;
+    flex-direction: row;
+}
+.pianoKey {
+border: 1px solid black;
+width: 50px;
+height: 200px;
+border-radius: 0px 0px 10px 10px;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+align-items: center;
+}
+
+#topbuffer {
+border: none
+}
+
+#buffer {
+width: 25px;
+height: 200px;
+}
+
+.space {
+    border: none;
+    background-color: white;
+}
+
+.space p.keyText {
+    color: transparent
+}

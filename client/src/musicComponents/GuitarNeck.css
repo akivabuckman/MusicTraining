@@ -1,0 +1,81 @@
+.string {
+    display: flex;
+}
+
+.fret {
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+    width: 150px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    background-color: darkgray;
+    display: flex;
+    justify-content: center;
+}
+
+#fretNumDiv {
+    display: flex;
+}
+
+.fretNum {
+    width: 150px;
+    text-align: center;
+}
+
+.fretNum:first-child {
+    width: 80px
+}
+
+
+
+.string .fret:first-child {
+    width: 80px;
+}
+
+.string .fret:first-child {
+    background-color: black;
+    width: 80px;
+}
+
+.fret::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    right: 0;
+    border-top: 2px solid white; /* Adjust line properties as needed */
+}
+
+.fretText {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 20px;
+    padding: 5px;
+    height: 60px;
+    width: 50px;
+    z-index:01;
+}
+
+.fretText p {
+    margin: 0
+}
+
+.circleDiv {
+    position: absolute;
+    top: 0;
+    left: 45%; /* Adjust this value to move it left */
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background-color: black;
+    border-radius: 100%;
+  }
+  
+  

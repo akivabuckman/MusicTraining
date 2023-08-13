@@ -1,0 +1,4 @@
+#notesDiv {
+    display: flex;
+    flex-wrap: wrap;
+}
