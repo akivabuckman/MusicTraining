@@ -33,3 +33,12 @@ app.use("/music", mrouter);
 app.listen(process.env.PORT, () => {
   console.log(`run on port ${process.env.PORT}`);
 });
+
+
+// DEPLOYMENT
+app.use(express.static(path.join(__dirname, "client/build")));
+
+// All other GET requests not handled before will return our React app
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
+});
