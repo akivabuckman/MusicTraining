@@ -32,7 +32,6 @@ const LoginRegister = (props) => {
       try {
         const res = await axios.post("/users/login", { username, password });
         if (res.status === 200) {
-          console.log("data", res.data);
           setToken(res.data.token);
           setMsg("");
           navigate("../stats");

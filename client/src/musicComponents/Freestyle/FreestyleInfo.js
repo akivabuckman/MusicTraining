@@ -124,14 +124,14 @@ const FreestyleInfo = (props) => {
         </div>
             </div>
             
-        <div id="popupContainer" class="popup-container">
-              <div class="popup">
+        <div id="popupContainer" className="popup-container">
+              <div className="popup">
                   <p>You need to <Link to="../login">log in</Link> or <Link to="../register">register</Link> to save your songs</p>
                   <button id="closePopupButton">OK</button>
               </div>
         </div>
-        <div id="popupContainerG" class="popup-containerG">
-            <div class="popupG">
+        <div id="popupContainerG" className="popup-containerG">
+            <div className="popupG">
                 <div id="dynamicText"></div>
                 <button id="closePopupButtonG">OK</button>
             </div>

@@ -26,6 +26,11 @@
     padding-bottom: 60px;
 }
 
+#songsAndLearningDiv {
+    min-height: 80%;
+    padding-bottom: 60px;
+}
+
 /* Style for the footer */
 .footer {
     position: sticky;

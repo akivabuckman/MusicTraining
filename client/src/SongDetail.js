@@ -117,8 +117,8 @@ const SongDetail = (props) => {
             <button onClick={deleteSong}>Delete Song</button>
             <button onClick={playSong}>Play Song</button>
         </div>
-        <div id="popupContainer" class="popup-container">
-            <div class="popup">
+        <div id="popupContainer" className="popup-container">
+            <div className="popup">
                 <p>{songName} has been deleted</p>
                 <button id="closePopupButton">OK</button>
             </div>
