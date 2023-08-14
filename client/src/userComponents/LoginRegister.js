@@ -17,7 +17,7 @@ const LoginRegister = (props) => {
   const handleClick = async () => {
     if (props.title === "Register") {
       try {
-        const res = await axios.post("http://localhost:5000/users/register", { username, password });
+        const res = await axios.post("/users/register", { username, password });
         if (res.status === 200) {
           console.log(res.data);
           setMsg("");
@@ -29,7 +29,7 @@ const LoginRegister = (props) => {
       }
     } else {
       try {
-        const res = await axios.post("http://localhost:5000/users/login", { username, password });
+        const res = await axios.post("/users/login", { username, password });
         if (res.status === 200) {
           console.log("data", res.data);
           setToken(res.data.token);
