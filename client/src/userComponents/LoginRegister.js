@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Box, TextField, Button } from "@mui/material";
 import { AppContext } from "../App";
+import "./LoginRegister.css"
 
 const LoginRegister = (props) => {
   const [username, setUsername] = useState("");
@@ -48,7 +49,7 @@ const LoginRegister = (props) => {
   }
 
   return (
-    <>
+    <div id="loginDiv">
       <h2>{props.title}</h2>
       <Box component={"form"} sx={{ m: 1 }} noValidate autoComplete="off">
         <TextField
@@ -72,7 +73,7 @@ const LoginRegister = (props) => {
         {props.title}
       </Button>
       <div>{msg}</div>
-    </>
+    </div>
   );
 };
 export default LoginRegister;

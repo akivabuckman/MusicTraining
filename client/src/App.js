@@ -7,6 +7,7 @@ import SongNotesApp from "./SongNotesApp";
 import FreestyleApp from "./FreestyleApp";
 import StatsApp from "./StatsApp";
 import SongDetail from "./SongDetail";
+import Footer from "./globalComponents/Footer";
 import "./App.css"
 import LoginRegister from "./userComponents/LoginRegister";
 
@@ -31,6 +32,7 @@ function App() {
           <Route path="/register" element={<LoginRegister title="Register" />} />
           <Route path="/login" element={<LoginRegister title="Login" />} />
         </Routes>
+        <Footer />
       </div>
     </AppContext.Provider>
   );
