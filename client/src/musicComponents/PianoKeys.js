@@ -149,7 +149,7 @@ const PianoKeys = (props) => {
             for (let i of topKeyDivs) {
                 if (i.getAttribute("note") === "") {
                     // console.log(i.get)
-                    i.setAttribute("style", "border:none; background-color:white")
+                    i.setAttribute("style", "border:none; background-color:darkgrey")
                     i.querySelector(".sharpText").setAttribute("style","color: transparent;")
                     i.querySelector(".flatText").setAttribute("style","color: transparent;")
                     i.querySelector(".keyText").setAttribute("style","color: transparent")
@@ -291,10 +291,13 @@ const PianoKeys = (props) => {
             const topKeyDivs = Array.from(document.querySelectorAll('.topKey'))
                 .filter(element => element.tagName === 'DIV');
             for (let i of topKeyDivs) {
-                i.querySelector(".keyText").setAttribute("style","color: white;")
-                i.querySelector(".sharpText").setAttribute("style","color: white;")
-                i.querySelector(".flatText").setAttribute("style","color: white;")
-                i.setAttribute("style", "border: 1px solid white")
+                if (i.getAttribute("note") !== "") {
+                    i.querySelector(".keyText").setAttribute("style","color: white;")
+                    i.querySelector(".sharpText").setAttribute("style","color: white;")
+                    i.querySelector(".flatText").setAttribute("style","color: white;")
+                    i.setAttribute("style", "border: 1px solid white")
+                }
+                
             }
             const bottomKeyDivs = Array.from(document.querySelectorAll('.bottomKey'))
                 .filter(element => element.tagName === 'DIV');
@@ -325,10 +328,10 @@ const PianoKeys = (props) => {
         <>
         <div id="pianoKeysDiv">
             <div className="container">
-                <p className="text">Colors: </p>
+                <p className="text">Colors</p>
                 <div className="toggle active" onClick={toggle}>
                     <div className="circle"></div>
-                </div>
+                </div> 
             </div>
             <div className="pianoRow" id="topRow">
                 <div id="topbuffer" className="pianoKey"></div>

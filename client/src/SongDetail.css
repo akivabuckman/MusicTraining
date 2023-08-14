@@ -2,3 +2,12 @@
     display: flex;
     flex-wrap: wrap;
 }
+button {
+    padding: 5px 10px; /* Add padding for select and button */
+    border: none;
+    background-color: #007bff; /* Set your preferred button color */
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 20px;
+}

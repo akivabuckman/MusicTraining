@@ -63,9 +63,16 @@ height: 200px;
 
 .space {
     border: none;
-    background-color: white;
+    background-color: darkgrey;
 }
 
 .space p.keyText {
     color: transparent
+}
+
+.container {
+    margin: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: 100px;
 }

@@ -18,8 +18,7 @@ const Navbar = (props) => {
 
   const logout = async () => {
     try {
-      const res = await axios.delete("http://localhost:5000/users/logout");
-      console.log(res)
+      const res = await axios.delete("/users/logout");
       if (res.status === 200) {
         navigate("/login");
       }
@@ -31,14 +30,13 @@ const Navbar = (props) => {
   useEffect(() => {
     if (token) {
         const payload = jwt_token(token);
-        console.log("payload=>", payload.username);
         setUsername(payload.username);
         setUserId(payload.userid);
       }
   }, [token]);
 
   return (
-    <div>
+    <div id="navbar">
       <Stack spacing={2} direction={"row"}>
       <Button>
           Hey there, {username ? username : "Guest"}
@@ -60,7 +58,7 @@ const Navbar = (props) => {
           <Button component={Link} to="/stats">
             Your Stats
           </Button>
-          <Button onClick={logout}>Logout</Button>
+          <Button onClick={logout}>Log Out</Button>
 
           </>
           :

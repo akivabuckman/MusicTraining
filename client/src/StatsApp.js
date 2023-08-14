@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { AppContext } from './App';
 import jwt_token from "jwt-decode";
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, redirect } from 'react-router-dom';
 
 
 
@@ -32,7 +32,7 @@ const StatsApp = (props) => {
 
     const fetchUserSongs = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/music/userSongs/${userId}`);
+            const response = await fetch(`/music/userSongs/${userId}`);
             const data = await response.json();
             setUserSongs(data);
         } catch (error) {
@@ -42,7 +42,7 @@ const StatsApp = (props) => {
 
     const fetchSongNotes = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/music/songNotes/${userId}`);
+            const response = await fetch(`/music/songNotes/${userId}`);
             const data = await response.json();
             setSongNotesData(data)
         } catch (error) {
@@ -179,6 +179,8 @@ const StatsApp = (props) => {
             const payload = jwt_token(token);
             setUsername(payload.username);
             setUserId(payload.userid);
+          } else {
+            navigate("../login");
           }
     }, []);
 
@@ -196,7 +198,8 @@ const StatsApp = (props) => {
     return (
         <>
           <h2 className="statsTitle">{username}'s Stats</h2>
-      
+          <div id="songsAndLearningdiv">
+          <div id="songsDiv" className="mainDiv">
           <h3>Your Songs:</h3>
           {userSongs.length === 0 ?
             <>
@@ -204,6 +207,7 @@ const StatsApp = (props) => {
               <p><Link to="../freestyle" className="createLink">Click here</Link> to create</p>
             </>
             :
+            <div id="songListDiv">
             <ol className="songList">
               {
                 userSongs.map(i => (
@@ -213,8 +217,12 @@ const StatsApp = (props) => {
                 ))
               }
             </ol>
+            </div>
           }
-      
+          </div>
+
+          <div className="mainDiv" id="learningDiv">
+            
           <h3>Your Learning:</h3>
       
           {songNotesData.length === 0 ?
@@ -224,39 +232,43 @@ const StatsApp = (props) => {
             </>
             :
             <>
-              <p>Overall Score: <strong className="score">{Math.round(overallScore)}%</strong></p>
+            <p>Overall Score: <strong className="score">{Math.round(overallScore)}%</strong></p>
       
-              <div id="guitarInfo" className="instrumentInfo">
-                <h3>Guitar:</h3>
-                <p>You've played <strong>{guitarData.length}</strong> song notes sessions on guitar.</p>
-                <p className='infoHeader'>Your best scores for each song:</p>
-                {Object.keys(guitarMaxSongState).map(key => (
-                  <p key={key}>{key}: <strong className="score">{guitarMaxSongState[key]}%</strong></p>
-                ))}
-                <p className='infoHeader'>Your average score by key:</p>
-                {
-                  guitarSortedKeys.map(i => (
-                    <p key={i}>{i}: <strong className="score">{guitarAvgKeyState[i]}%</strong></p>
-                  ))
-                }
-              </div>
-      
-              <div id="pianoInfo" className="instrumentInfo">
-                <h3>Piano:</h3>
-                <p>You've played <strong>{pianoData.length}</strong> song notes sessions on piano.</p>
-                <p className='infoHeader'>Your best scores for each song:</p>
-                {Object.keys(pianoMaxSongState).map(key => (
-                  <p key={key}>{key}: <strong className="score">{pianoMaxSongState[key]}%</strong></p>
-                ))}
-                <p className='infoHeader'>Your average score by key:</p>
-                {
-                  pianoSortedKeys.map(i => (
-                    <p key={i}>{i}: <strong className="score">{pianoAvgKeyState[i]}%</strong></p>
-                  ))
-                }
-              </div>
+      <div id="guitarInfo" className="instrumentInfo">
+        <h3>Guitar:</h3>
+        <p>You've played <strong>{guitarData.length}</strong> song notes sessions on guitar.</p>
+        <p className='infoHeader'>Your best scores for each song:</p>
+        {Object.keys(guitarMaxSongState).map(key => (
+          <p key={key}>{key}: <strong className="score">{guitarMaxSongState[key]}%</strong></p>
+        ))}
+        <p className='infoHeader'>Your average score by key:</p>
+        {
+          guitarSortedKeys.map(i => (
+            <p key={i}>{i}: <strong className="score">{guitarAvgKeyState[i]}%</strong></p>
+          ))
+        }
+      </div>
+
+      <div id="pianoInfo" className="instrumentInfo">
+        <h3>Piano:</h3>
+        <p>You've played <strong>{pianoData.length}</strong> song notes sessions on piano.</p>
+        <p className='infoHeader'>Your best scores for each song:</p>
+        {Object.keys(pianoMaxSongState).map(key => (
+          <p key={key}>{key}: <strong className="score">{pianoMaxSongState[key]}%</strong></p>
+        ))}
+        <p className='infoHeader'>Your average score by key:</p>
+        {
+          pianoSortedKeys.map(i => (
+            <p key={i}>{i}: <strong className="score">{pianoAvgKeyState[i]}%</strong></p>
+          ))
+        }
+      </div> 
             </>
+              
           }
+          
+        </div>
+        </div>
         </>
       );
       

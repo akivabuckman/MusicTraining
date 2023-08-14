@@ -101,6 +101,7 @@ const GuitarNeck = (props) => {
     }
 
     return(
+
         <div id="guitarNeckDiv">
             <div className="container">
                 <p className="text">Colors: </p>
@@ -108,9 +109,10 @@ const GuitarNeck = (props) => {
                     <div className="circle"></div>
                 </div>
             </div>
+            <div id="neck">
             <div className="string">
                 <div className="fret open">
-                    <div className="fretText" octave="4" style={{backgroundColor: `rgb${props.colors["E"]}`}} style={{backgroundColor: `rgb${props.colors["E"]}`}}>
+                    <div className="fretText" octave="4" style={{backgroundColor: `rgb${props.colors["E"]}`}}>
                         <p>E</p>
                         <p>(1)</p>    
                     </div>
@@ -363,20 +365,22 @@ const GuitarNeck = (props) => {
                     </div>
                 </div>
             </div>
-            <div id="fretNumDiv">
-                <div className="fretNum open">0</div>
-                <div className="fretNum">1</div>
-                <div className="fretNum">2</div>
-                <div className="fretNum">3</div>
-                <div className="fretNum">4</div>
-                <div className="fretNum">5</div>
-                <div className="fretNum">6</div>
-                <div className="fretNum">7</div>
-                <div className="fretNum">8</div>
-                <div className="fretNum">9</div>
-            </div>
             
             
+            
+        </div>
+        <div id="fretNumDiv">
+            <div className="fretNum open">0</div>
+            <div className="fretNum">1</div>
+            <div className="fretNum">2</div>
+            <div className="fretNum">3</div>
+            <div className="fretNum">4</div>
+            <div className="fretNum">5</div>
+            <div className="fretNum">6</div>
+            <div className="fretNum">7</div>
+            <div className="fretNum">8</div>
+            <div className="fretNum">9</div>
+        </div>
         </div>
     )
 };

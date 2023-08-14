@@ -49,7 +49,6 @@ const LoginRegister = (props) => {
 
   return (
     <>
-      <button onClick={log}>log user</button>
       <h2>{props.title}</h2>
       <Box component={"form"} sx={{ m: 1 }} noValidate autoComplete="off">
         <TextField

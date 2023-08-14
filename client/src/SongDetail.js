@@ -41,7 +41,7 @@ const SongDetail = (props) => {
         const fetchSongDetails = async () => {
             if (userId) {
                 try {
-                    const response = await fetch(`http://localhost:5000/music/userSongs/${userId}/${song_id}`);
+                    const response = await fetch(`/music/userSongs/${userId}/${song_id}`);
                     const data = await response.json();
                     setSongData(data[0])
                 } catch (error) {
@@ -63,7 +63,7 @@ const SongDetail = (props) => {
 
     const deleteSong = async () => {
         try {
-            await fetch(`http://localhost:5000/music/userSongs/${song_id}`, {
+            await fetch(`/music/userSongs/${song_id}`, {
                 method: 'DELETE'
             });
             document.querySelector("#popupContainer").style.display = "block";
@@ -105,8 +105,7 @@ const SongDetail = (props) => {
     return (
         <>
         <div>
-            <button onClick={log}>logsondetail</button>
-            <button onClick={playSong}>play</button>
+            {/* <button onClick={log}>logsondetail</button> */}
             <h2>Song Name: {songName}</h2>
             <div id="notesDiv">
             {
@@ -116,6 +115,7 @@ const SongDetail = (props) => {
             }
             </div>
             <button onClick={deleteSong}>Delete Song</button>
+            <button onClick={playSong}>Play Song</button>
         </div>
         <div id="popupContainer" class="popup-container">
             <div class="popup">

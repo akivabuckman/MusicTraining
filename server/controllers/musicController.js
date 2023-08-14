@@ -4,10 +4,8 @@ import {createSongNotes, createUserSong, userSongs, songNotes, userSong, deleteS
 
 export const songNotesToDb = async (req, res) => {
     const {user_id, key, song, correct_count, song_length, song_degrees, user_notes, song_notes, score, instrument} = req.body;
-    console.log("req.body", req.body);
     try {
       const newSongNotes = await createSongNotes(req.body);
-      console.log(newSongNotes);
       res.status(200).json({message: "song added to db"});
     } catch(error) {
       console.log(error);
@@ -17,11 +15,8 @@ export const songNotesToDb = async (req, res) => {
   
   export const userSongToDb = async (req, res) => {
     const {user_id, song_length, user_notes, user_times, notes_octaves} = req.body;
-    console.log(req.body)
     try {
       const newUserSong = await createUserSong(req.body);
-      console.log(newUserSong);
-      console.log(req.body)
       res.status(200).json({message: "song added to db"});
     } catch(error) {
       console.log(error);

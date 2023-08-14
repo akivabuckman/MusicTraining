@@ -1,7 +1,17 @@
-nav{
+#navbar{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    background-color: darkblue;
+    width: 100%;
+}
+
+#navbar div a {
+    color: white;
+}
+
+#navbar div button {
+    color: gold
 }
 
 #everything {

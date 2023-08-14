@@ -35,7 +35,7 @@ const FreestyleInfo = (props) => {
                   user_times: props.userTimes,
                   notes_octaves: props.notesWithOctaves
                 })
-                const res = await fetch("http://localhost:5000/music/userSong", {
+                const res = await fetch("/music/userSong", {
                   method: "POST",
                   headers: {"content-type": "application/json"},
                   body: data,
@@ -91,9 +91,13 @@ const FreestyleInfo = (props) => {
     
     return (
         <>
-        {/* <button onClick={log}>log fsinfo</button> */}
-        <div id="SongNotesInfoPaneDiv" className="info-pane">
-            <p>Instrument: 
+        <div id="FreestyleInfoPaneDiv" className="info-pane">
+            <div id="titleDiv">
+                <h3 id="title">Freestyle</h3>
+                <h4>Play around and have fun!</h4>
+            </div>
+            <div id="data">
+                <p>Instrument: 
                 <select onChange={handleInstrumentChange}>
                     <option key="Piano" value="Piano">Piano</option>
                     <option key="Guitar" value="Guitar">Guitar</option>
@@ -118,6 +122,8 @@ const FreestyleInfo = (props) => {
             <input id="songNameInput" name="song_name" type="text" placeholder='Enter Song Name'></input>
             <button onClick={saveSong}>Save</button>
         </div>
+            </div>
+            
         <div id="popupContainer" class="popup-container">
               <div class="popup">
                   <p>You need to <Link to="../login">log in</Link> or <Link to="../register">register</Link> to save your songs</p>

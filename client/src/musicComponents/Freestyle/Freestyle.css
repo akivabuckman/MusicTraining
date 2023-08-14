@@ -15,6 +15,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  max-width: 1400px;
 }
 
 .note {
@@ -77,4 +78,17 @@
 
 .info-pane select {
   min-width: 120px; /* Set a minimum width for select elements */
+}
+
+#titelDiv {
+  display: flex;
+  flex-direction: column;
+}
+
+#FreestyleInfoPaneDiv {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  text-align: center;
+  justify-content: space-around;
 }

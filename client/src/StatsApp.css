@@ -36,7 +36,7 @@
     font-weight: bold;
   }
   
-  .instrumentInfo {
+  .instrumentInfo, #songListDiv {
     background-color: #f2f2f2;
     padding: 16px;
     margin-top: 30px;
@@ -50,3 +50,30 @@
     color: #3498db;
   }
   
+  #songsAndLearningdiv {
+    display: flex;
+    justify-content: space-between;
+  }
+
+
+  h3, p {
+    margin: 0;
+  }
+
+  #guitarInfo, #pianoInfo {
+    display: inline-block;
+    width: 45%; /* Adjust as needed */
+    border: 1px solid #ccc; /* For visualization */
+    box-sizing: border-box;
+    padding: 10px;
+    margin: 10px
+  }
+  
+
+  .mainDiv {
+    margin: 20px;
+    border: 5px solid burlywood;
+    padding: 10px;
+    border-radius: 30px;
+    background-color: lightblue;
+  }

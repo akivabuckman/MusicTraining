@@ -16,6 +16,11 @@ const SongNotesInfoPane = (props) => {
     }
     return (
         <div id="SongNotesInfoPaneDiv" className="info-pane">
+            <div id="titleDiv">
+                <h3 id="title">Song Notes</h3>
+                <h4>Play the notes shown</h4>
+            </div>
+            <div id="data">
             <p>Song:  
                 <select value={props.chosenSong} onChange={handleSongChange}>
                         {
@@ -27,8 +32,7 @@ const SongNotesInfoPane = (props) => {
                         }
                 </select>
             </p>
-            <p>Perfect Notes: {props.correctCount}/{props.currentDegreeIndex}</p>
-            <p>Song Length: {props.melodyDegrees.length} Notes</p>
+            <p>Perfect Notes: <strong>{props.correctCount}/{props.currentDegreeIndex}</strong></p>
             <p>Instrument:  
                 <select onChange={handleInstrumentChange}>
                     <option key="Piano" value="Piano">Piano</option>
@@ -45,6 +49,7 @@ const SongNotesInfoPane = (props) => {
                 </select>
             </p>
             <button onClick={props.reset}>Start Over</button>
+            </div>
         </div>
     );
 };
