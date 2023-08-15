@@ -98,7 +98,7 @@ const GuitarNeck = (props) => {
         }
 
         try {
-            const sound = require(`../guitarSounds/${newNote}${parseInt(octave)}.mp3`);
+            const sound = require(`../sounds/guitar/${newNote}${parseInt(octave)}.mp3`);
             const audio = new Audio(sound);
             audio.play();
         } catch(error) {console.log(error)};

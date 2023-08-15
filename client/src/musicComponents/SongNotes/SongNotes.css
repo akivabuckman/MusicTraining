@@ -83,7 +83,7 @@
 .currentNote {
   border: 3px solid black;
   outline: 5px solid yellow;
-  box-shadow: 0 0 20px yellow; /* Add a red shadow to the element */
+  box-shadow: 0 0 20px yellow;
 
 
 }

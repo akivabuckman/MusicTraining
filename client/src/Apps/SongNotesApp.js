@@ -1,14 +1,19 @@
-import "./musicComponents/SongNotes/SongNotes.css"
-import GuitarNeck from './musicComponents/instruments/GuitarNeck';
-import SongNotes from './musicComponents/SongNotes/SongNotes';
-import { useState, useEffect, useContext } from "react";
-import melodies from "./melodies";
-import SongNotesInfoPane from './musicComponents/SongNotes/SongNotesInfoPane';
-import PianoKeys from './musicComponents/instruments/PianoKeys';
+import "../musicComponents/SongNotes/SongNotes.css"
+import GuitarNeck from '../musicComponents/instruments/GuitarNeck';
+import SongNotes from '../musicComponents/SongNotes/SongNotes';
+import { useState, useEffect } from "react";
+import melodies from "../melodies";
+import SongNotesInfoPane from '../musicComponents/SongNotes/SongNotesInfoPane';
+import PianoKeys from '../musicComponents/instruments/PianoKeys';
 import "./StatsApp.css"
 
 
-
+/**
+ * Component for the SongNotes App
+ * @component
+ * @param {object} props - properties passed into the component 
+ * @returns {JSX.Element} = JSX elements of the App page
+ */
 function SongNotesApp(props) {
   const allNotes = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
   const degreeToFret = {1: 0, 2: 2, 3: 4, 4:5, 5:7, 6:9, 7:11, 8:12, 9: 14, 10: 16, 11:17, 12: 19, 13:21, 14: 23};
@@ -31,12 +36,29 @@ function SongNotesApp(props) {
   const [pressedKey, setPressedKey] = useState("");
 
 
-
+  /**
+   * resets to the first note and updates lowest degree so piano will dynamically position, upon song change
+   * 
+   * @function useEffectUponSongUpdate
+   * @param {string} chosenSong - user-chosen song
+   * @param {number[]} melodies[chosenSong] - array of song melody degrees
+   */
   useEffect(()=>{
     setCurrentDegreeIndex(0)
     setLowestDegree(Math.min(...melodies[chosenSong]))
   }, [chosenSong]);
 
+  /**
+   * resets trycount, degree index, user notes, etc. called upon in various events
+   * @function reset
+   * @fires setCurrentDegreeIndex
+   * @fires setCorrectCount
+   * @fires setTryCount
+   * @fires setUserNotes
+   * @fires setCorrectDegree
+   * @fires setCorrectNote
+   * 
+   */
   const reset = () => {
     const noteDivs = document.querySelectorAll(".note");
     noteDivs.forEach(i=>i.classList.remove("currentNote"));
@@ -88,10 +110,6 @@ function SongNotesApp(props) {
     "Bb": "(0, 0, 0)",
     "B": "(255, 255, 255)"
   } 
-
-  const log = () => {
-    console.log(instrument)
-  }
 
   return (
     <div className="songNotesApp">

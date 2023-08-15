@@ -100,7 +100,7 @@ const SongNotes = (props) => {
               score: props.correctCount/props.melodyDegrees.length,
               instrument: props.instrument
             })
-            const res = await fetch("http://localhost:5000/music/songNotes", {
+            const res = await fetch("/music/songNotes", {
               method: "POST",
               headers: {"content-type": "application/json"},
               body: data,
@@ -200,7 +200,7 @@ const SongNotes = (props) => {
         setUsername(payload.username);
         setUserId(payload.userid);
       }
-  }, []);
+  }, [token]);
     
     return (
       <>

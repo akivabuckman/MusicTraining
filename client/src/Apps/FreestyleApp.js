@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext } from "react";
-import PianoKeys from "./musicComponents/instruments/PianoKeys";
-import FreestyleInfo from "./musicComponents/Freestyle/FreestyleInfo";
-import FreestyleNotes from "./musicComponents/Freestyle/FreestyleNotes"
-import GuitarNeck from "./musicComponents/instruments/GuitarNeck";
+import PianoKeys from "../musicComponents/instruments/PianoKeys";
+import FreestyleInfo from "../musicComponents/Freestyle/FreestyleInfo";
+import FreestyleNotes from "../musicComponents/Freestyle/FreestyleNotes"
+import GuitarNeck from "../musicComponents/instruments/GuitarNeck";
 
 const FreestyleApp = (props) => {
     const [userNotes, setUserNotes] = useState([]);

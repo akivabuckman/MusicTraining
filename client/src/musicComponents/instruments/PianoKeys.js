@@ -284,7 +284,7 @@ const PianoKeys = (props) => {
             const noteIndex = naturalNotes.indexOf(newNote);
             octave = noteIndex >= AKeyNaturalIndex ? 3 : 4;
             try {
-                const sound = require(`../sounds/${newNote}${parseInt(octave)}.mp3`);
+                const sound = require(`../sounds/piano/${newNote}${parseInt(octave)}.mp3`);
                 const audio = new Audio(sound);
                 audio.play();
             } catch(error) {console.log(error)};
@@ -296,7 +296,7 @@ const PianoKeys = (props) => {
             const noteIndex = naturalNotes.indexOf(newNote);
             octave = noteIndex >= AKeyNaturalIndex ? 4 : 5;
             try {
-                const sound = require(`../sounds/${newNote}${parseInt(octave)}.mp3`);
+                const sound = require(`../sounds/piano/${newNote}${parseInt(octave)}.mp3`);
                 const audio = new Audio(sound);
                 audio.play();
             } catch(error) {console.log(error)};
@@ -307,7 +307,7 @@ const PianoKeys = (props) => {
             const noteIndex = allNotes.indexOf(newNote);
             octave = noteIndex >= allNotes.indexOf(props.lowestNote) ? 3 : 4;
             try {
-                const sound = require(`../sounds/${newNote}${parseInt(octave)}.mp3`);
+                const sound = require(`../sounds/piano/${newNote}${parseInt(octave)}.mp3`);
                 const audio = new Audio(sound);
                 audio.play();
             } catch(error) {};
@@ -318,7 +318,7 @@ const PianoKeys = (props) => {
             const noteIndex = allNotes.indexOf(newNote);
             octave = noteIndex >= allNotes.indexOf(props.lowestNote) ? 4 : 5;
             try {
-                const sound = require(`../sounds/${newNote}${parseInt(octave)}.mp3`);
+                const sound = require(`../sounds/piano/${newNote}${parseInt(octave)}.mp3`);
                 const audio = new Audio(sound);
                 audio.play();
             } catch(error) {};

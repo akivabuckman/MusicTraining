@@ -1,9 +1,18 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "./SongDetail.css"
-import { AppContext } from "./App"
+import { AppContext } from "../App"
 import jwt_token from "jwt-decode";
+import "./SongDetail.css"
 
+/**
+ * Represents a component that displays detailed information about a song.
+ * Controls functionality of the page
+ *
+ * @component
+ * @param {Object} props - The props object that contains any additional properties passed to the component.
+ * @returns {JSX.Element} JSX element representing the SongDetail component.
+ *
+ */
 const SongDetail = (props) => {
     const navigate = useNavigate();
     const colors = {
@@ -34,7 +43,21 @@ const SongDetail = (props) => {
     const { token } = useContext(AppContext);
     const { song_id } = useParams();
     
+    /**
+     * fetches song details (notes, timestamps, etc.)
+     * @function useEffectUponSongOrUserChange
+     * @param {number} userId - user ID#
+     * @param {number} song_id = song ID#
+     * @fires setSongData
+     * @fires fetchSongDetails
+     */
     useEffect(() => {
+        /**
+         * @function fetchSongDetails
+         * @async
+         * @param {number} userId - user ID#
+         * 
+         */
         const fetchSongDetails = async () => {
             if (userId) {
                 try {
@@ -49,6 +72,13 @@ const SongDetail = (props) => {
         fetchSongDetails();
     }, [song_id, userId]);
 
+    /**
+     * Sets notes and songname of currently viewed song after fetch
+     * @function useEffectUponSongDataUpdate
+     * @fires setNoteArray
+     * @fires setSongName
+     * @param {object} songData - object of user's song data
+     */
     useEffect(()=>{
         if (songData.user_notes) {
             const modifiedString = "[" + songData.user_notes.replace("{", '').replace("}", '') + "]";
@@ -58,6 +88,13 @@ const SongDetail = (props) => {
         };
     }, [songData])
 
+    /**
+     * Deletes currently viewed song and controls popup box that informs of the deletion
+     * 
+     * @async
+     * @function deleteSong
+     * @param {number} song_id - song ID#
+     */
     const deleteSong = async () => {
         try {
             await fetch(`/music/userSongs/${song_id}`, {
@@ -68,25 +105,39 @@ const SongDetail = (props) => {
             navigate("/stats")
 
             })
-            // Redirect the user to the stats page
+            /**
+             *  Redirect the user to the stats page
+             */
             
         } catch (error) {
             console.log(error);
         }
     };
 
+    /**
+     * plays the song audially
+     * @function playSong
+     * @param {object} songData - song data including notes and timestamps
+     */
     const playSong = () => {
         const firstTime = songData.user_times[0];
         
         for (let i in songData.notes_octaves) {
             setTimeout(() => {
-                const sound = require(`./musicComponents/sounds/${songData.notes_octaves[i]}.mp3`);
+                const sound = require(`../musicComponents/sounds/${songData.notes_octaves[i]}.mp3`);
                 const audio = new Audio(sound)
                 audio.play();
             }, songData.user_times[i] - firstTime);
         }
     }
 
+    /**
+     * Updates username and user id upon token mount
+     * @function useEffectUponTokenMount
+     * @param {string} token - secret generated token
+     * @fires setUsername
+     * @fires setUserId
+     */
     useEffect(() => {
         if (token) {
             const payload = jwt_token(token);
@@ -95,14 +146,9 @@ const SongDetail = (props) => {
           }
     }, [token]);
 
-    const log = () => {
-        console.log(token)
-    }
-
     return (
         <>
         <div>
-            {/* <button onClick={log}>logsondetail</button> */}
             <h2>Song Name: {songName}</h2>
             <div id="notesDiv">
             {

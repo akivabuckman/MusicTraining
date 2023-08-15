@@ -2,13 +2,14 @@ import { Routes, Link, Route, Router, Switch } from "react-router-dom";
 import Navbar from "./globalComponents/Navbar";
 // import Auth from "./auth/Auth";
 import { createContext, useState } from "react";
-import SongNotesApp from "./SongNotesApp";
-import FreestyleApp from "./FreestyleApp";
-import StatsApp from "./StatsApp";
-import SongDetail from "./SongDetail";
+import SongNotesApp from "./Apps/SongNotesApp";
+import FreestyleApp from "./Apps/FreestyleApp";
+import StatsApp from "./Apps/StatsApp";
+import SongDetail from "./Apps/SongDetail";
 import Footer from "./globalComponents/Footer";
-import "./App.css"
 import LoginRegister from "./userComponents/LoginRegister";
+import "./App.css"
+
 
 export const AppContext = createContext(null);
 

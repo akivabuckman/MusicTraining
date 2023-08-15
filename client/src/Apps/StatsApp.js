@@ -1,10 +1,25 @@
 import { useState, useEffect, useContext } from 'react';
-import { AppContext } from './App';
+import { AppContext } from '../App';
 import jwt_token from "jwt-decode";
 import { useNavigate, Link } from 'react-router-dom';
 
 
-
+/**
+ * Represents a component that displays statistics and learning progress for a user's songs.
+ *
+ * @component
+ * @param {object} props - The properties passed to the component.
+ * @param {Array<Object>} props.setLowestNote - Function to set the lowest note.
+ * @param {Array<Object>} props.setInstrument - Function to set the instrument.
+ * @param {string} props.instrument - The selected instrument.
+ * @param {string} props.lowestNote - The lowest note.
+ * @param {Array<Object>} props.reset - Function to reset.
+ * @param {Array<Object>} props.userNotes - Array of user notes.
+ * @param {Array<Object>} props.userTimes - Array of timestamps of each played note.
+ * @param {Array<Object>} props.notesWithOctaves - Array of notes with octaves.
+ * @param {Array<Object>} props.setNameBoxActive - Function to set name box active.
+ * @returns {JSX.Element} - JSX elements representing song info.
+ */
 const StatsApp = (props) => {
     const [userSongs, setUserSongs] = useState([]);
     const [songNotesData, setSongNotesData] = useState([]);
@@ -26,7 +41,13 @@ const StatsApp = (props) => {
     const [pianoMaxScores, setPianoMaxScores] = useState({});
     const navigate = useNavigate();
 
-
+    /**
+     * Fetches song data from the server of current user.
+     *
+     * @async
+     * @function fetchUserSongs
+     * @fires setUserSongs
+     */
     const fetchUserSongs = async () => {
         try {
             const response = await fetch(`/music/userSongs/${userId}`);
@@ -37,6 +58,13 @@ const StatsApp = (props) => {
         }
     }
 
+     /**
+     * Fetches song notes data from the server.
+     *
+     * @async
+     * @function fetchSongNotes
+     * @fires setSongNotesData
+     */
     const fetchSongNotes = async () => {
         try {
             const response = await fetch(`/music/songNotes/${userId}`);
@@ -47,6 +75,17 @@ const StatsApp = (props) => {
         }
     }
 
+    /**
+     * Performs calculations for statistics of user's guitar song notes sessions
+     *
+     * @function guitarMath
+     * @param {object} songNotesData - data of user's song notes sessions
+     * @fires setOverallScore
+     * @param {object} guitarData - data of user's guitar song notes sessions
+     * @fires setGuitarOverallScore
+     * @fires setGuitarAvgKeyState
+     * @fires setGuitarMaxSongState
+     */
     const guitarMath = () => {
       // overall score
         const scores = songNotesData.map(item => item.score === null ? 0 : parseFloat(item.score));
@@ -103,6 +142,17 @@ const StatsApp = (props) => {
         setGuitarMaxSongState(guitarSongMaxScores)
     }    
     
+        /**
+     * Performs calculations for statistics of user's guitar song notes sessions
+     *
+     * @function pianoMath
+     * @param {object} songNotesData - data of user's song notes sessions
+     * @fires setOverallScore
+     * @param {object} pianoData - data of user's piano song notes sessions
+     * @fires setPianoOverallScore
+     * @fires setPianoAvgKeyState
+     * @fires setPianoMaxSongState
+     */
     const pianoMath = () => {
         const pianoData = songNotesData.filter(item => item.instrument === "piano");
         const pianoScores = pianoData.map(item => item.score === null ? 0 : parseInt(item.score, 10));
@@ -153,27 +203,65 @@ const StatsApp = (props) => {
         setPianoMaxSongState(pianoSongMaxScores)
     }
   
+    /**
+     * sorts keys by score, for piano song notes sessions
+     * @function useEffectUponPianoAvgUpdate
+     * @fires setPianoSortedKeys
+     * @param {object} pianoAvgKeyState - array of each key's average score of current user
+     */
     useEffect(()=>{
         setPianoSortedKeys(Object.keys(pianoAvgKeyState).sort((a, b) => pianoAvgKeyState[b] - pianoAvgKeyState[a]))
     }, [pianoAvgKeyState]);
 
+    /**
+     * sorts keys by score, for guitar song notes sessions
+     * @function useEffectUponGuitarAvgUpdate
+     * @fires setGuitarSortedKeys
+     * @param {object} guitarAvgKeyState - array of each key's average score of current user
+     */
     useEffect(()=>{
         setGuitarSortedKeys(Object.keys(guitarAvgKeyState).sort((a, b) => guitarAvgKeyState[b] - guitarAvgKeyState[a]))
     }, [guitarAvgKeyState]);
 
+    /**
+     * calls guitarMath function upon guitarData update
+     * @function useEffectUponGuitarDataUpdate
+     * @fires guitarMath
+     * @param {object} guitarData - data of user's guitar song notes sessions
+     */
     useEffect(()=>{
         guitarMath();
     }, [guitarData]);
 
+    /**
+     * calls pianoMath function upon pianoData update
+     * @function useEffectUponPianoDataUpdate
+     * @fires pianoMath
+     * @param {object} pianoData - data of user's piano song notes sessions
+     */
     useEffect(()=>{
         pianoMath();
     }, [pianoData]);
 
+    /**
+     * sets guitar and piano data from songNotesData
+     * @function useEffectUponSongNotesDataUpdate
+     * @fires setGuitarData
+     * @fires setPianoData
+     * @param {object} songNotesData - data of all of user's song notes sessions
+     */
     useEffect(()=>{
         setGuitarData(songNotesData.filter(item => item.instrument === "guitar"));
         setPianoData(songNotesData.filter(item => item.instrument === "piano"));
     }, [songNotesData])
 
+    /**
+     * sets username and userId upon token update
+     * @function useEffectUponTokenUpdate
+     * @param {string} token - secret generated token
+     * @fires setUsername
+     * @fires setUserId
+     */
     useEffect(() => {
         if (token) {
             const payload = jwt_token(token);
@@ -182,18 +270,21 @@ const StatsApp = (props) => {
           } else {
             navigate("../login");
           }
-    }, []);
-
+    }, [token]);
+    
+    /**
+     * sets triggers fetches of user songs and songnotes upon userId update
+     * @function useEffectUponUserIdUpdate
+     * @param {number} userId - user ID#
+     * @fires fetchUserSongs
+     * @fires fetchSongNotes
+     */
     useEffect(()=>{
         if (userId !== "") {
             fetchUserSongs();
             fetchSongNotes();
         }
     }, [userId])
-    
-    const log = () => {
-        console.log(pianoAvgKeyState)
-    }
 
     return (
         <>
