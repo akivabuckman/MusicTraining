@@ -124,7 +124,7 @@ const SongDetail = (props) => {
         
         for (let i in songData.notes_octaves) {
             setTimeout(() => {
-                const sound = require(`../musicComponents/sounds/${songData.notes_octaves[i]}.mp3`);
+                const sound = require(`../musicComponents/sounds/piano/${songData.notes_octaves[i]}.mp3`);
                 const audio = new Audio(sound)
                 audio.play();
             }, songData.user_times[i] - firstTime);
