@@ -11,9 +11,6 @@ const StatsApp = (props) => {
     const [guitarData, setGuitarData] = useState([])
     const [pianoData, setPianoData] = useState([])
     const [overallScore, setOverallScore] = useState(0);
-    // const [maxSongState, setMaxSongState] =useState({});
-    // const [avgKeyState, setAvgKeyState] = useState({})
-    // const [sortedKeys, setSortedKeys] = useState([]);
     const [username, setUsername] = useState("");
     const [userId, setUserId] = useState("");
     const { token } = useContext(AppContext);
@@ -51,10 +48,13 @@ const StatsApp = (props) => {
     }
 
     const guitarMath = () => {
-        const scores = songNotesData.map(item => item.score === null ? 0 : parseInt(item.score, 10));
+      // overall score
+        const scores = songNotesData.map(item => item.score === null ? 0 : parseFloat(item.score));
         const sum = scores.reduce((total, score) => total + score, 0);
         const average = sum / songNotesData.length;
         setOverallScore(average*100);
+
+        // guitar scores
         const guitarScores = guitarData.map(item => item.score === null ? 0 : parseInt(item.score, 10));
         const guitarSum = guitarScores.reduce((total, score) => total + score, 0);
         const guitarAverage = guitarSum / guitarData.length;
