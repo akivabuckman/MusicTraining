@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: SongNotesInfoPane.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: SongNotesInfoPane.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect } from 'react';
+import "./SongNotes.css"
+
+/**
+ * A component that displays information and controls related to song notes
+ *
+ * @component
+ * @param {Object} props - The properties passed to the component.
+ * @param {Object} props.melodies - An object containing available melodies.
+ * @param {string} props.chosenSong - The currently chosen song.
+ * @param {number} props.correctCount - The count of correctly played notes.
+ * @param {number} props.currentDegreeIndex - The total number of notes attempted.
+ * @param {string} props.songKey - The selected musical key.
+ * @param {Function} props.setSongKey - Function to update the selected musical key.
+ * @param {string} props.instrument - The selected instrument (Piano or Guitar).
+ * @param {Function} props.setInstrument - Function to update the selected instrument.
+ * @param {string} props.chosenSong - The chosen song.
+ * @param {Function} props.setChosenSong - Function to update the chosen song.
+ * @param {Function} props.reset - Function to reset the user notes.
+ * @returns {JSX.Element} The rendered component.
+ */
+const SongNotesInfoPane = (props) => {
+    const allNotes = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
+
+    /**
+     * changes songKey prop when user changes the key
+     * @function handleKeyChange
+     * @param {object} event - user changes key
+     * @fires setSongKey
+     */
+    const handleKeyChange = (event) => {
+        props.setSongKey(event.target.value)
+    };
+
+    /**
+     * changes instrument prop when user changes the instrument
+     * @function handleInstrumentChange
+     * @param {object} event - user changes instrument
+     * @fires setInstrument
+     */
+    const handleInstrumentChange = (event) => {
+        props.setInstrument(event.target.value.toLowerCase())
+    };
+    
+    /**
+     * changes songKey prop when user changes the song
+     * @function handleSongChange
+     * @param {object} event - user changes song
+     * @fires setChosenSong
+     */
+    const handleSongChange = (event) => {
+        props.setChosenSong(event.target.value)
+    }
+    
+    return (
+        &lt;div id="SongNotesInfoPaneDiv" className="info-pane">
+            &lt;div id="titleDiv">
+                &lt;h3 id="title">Song Notes&lt;/h3>
+                &lt;h4>Play the notes shown&lt;/h4>
+            &lt;/div>
+            &lt;div id="data">
+            &lt;p>Song:  
+                &lt;select value={props.chosenSong} onChange={handleSongChange}>
+                        {
+                            Object.keys(props.melodies).map((melody, index)=> {
+                                return(
+                                    &lt;option key={index} value={melody}>{melody}&lt;/option>
+                                )
+                            })
+                        }
+                &lt;/select>
+            &lt;/p>
+            &lt;p>Perfect Notes: &lt;strong>{props.correctCount}/{props.currentDegreeIndex}&lt;/strong>&lt;/p>
+            &lt;p>Instrument:  
+                &lt;select onChange={handleInstrumentChange}>
+                    &lt;option key="Piano" value="Piano">Piano&lt;/option>
+                    &lt;option key="Guitar" value="Guitar">Guitar&lt;/option>
+                &lt;/select>
+            &lt;/p>
+            &lt;p>Key:
+                &lt;select value={props.songKey} onChange={handleKeyChange}>
+                    {allNotes.map((i) => (
+                        &lt;option key={i} value={i}>
+                            {i}
+                        &lt;/option>
+                    ))}
+                &lt;/select>
+            &lt;/p>
+            &lt;button onClick={props.reset}>Start Over&lt;/button>
+            &lt;/div>
+        &lt;/div>
+    );
+};
+
+export default SongNotesInfoPane;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#SongNotes">SongNotes</a></li><li><a href="global.html#SongNotesInfoPane">SongNotesInfoPane</a></li><li><a href="global.html#analyzePressedKey">analyzePressedKey</a></li><li><a href="global.html#handleInstrumentChange">handleInstrumentChange</a></li><li><a href="global.html#handleKeyChange">handleKeyChange</a></li><li><a href="global.html#handleSongChange">handleSongChange</a></li><li><a href="global.html#saveToDb">saveToDb</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Aug 15 2023 15:09:40 GMT+0300 (Israel Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

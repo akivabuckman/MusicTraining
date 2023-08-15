@@ -32,9 +32,6 @@ const SongDetail = (props) => {
     const [username, setUsername] = useState("");
     const [userId, setUserId] = useState("");
     const { token } = useContext(AppContext);
-
-
-
     const { song_id } = useParams();
     
     useEffect(() => {

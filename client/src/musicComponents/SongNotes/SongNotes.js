@@ -4,7 +4,28 @@ import { AppContext } from "../../App";
 import jwt_token from "jwt-decode";
 import { Link } from 'react-router-dom';
 
-
+/**
+ * Represents the component for displaying and interacting with song notes.
+ *
+ * @param {Object} props - The properties passed to the component.
+ * @param {string} props.songKey - The key of the song (e.g., "C", "D#").
+ * @param {number[]} props.melodyDegrees - The degrees of the melody in the song.
+ * @param {string[]} props.colors - The colors associated with each note.
+ * @param {boolean} props.colorsOn - Whether colors are enabled.
+ * @param {string} props.note - The currently played note.
+ * @param {string} props.correctNote - The correct note for the current degree.
+ * @param {number} props.currentDegreeIndex - The index of the current melody degree.
+ * @param {number} props.tryCount - The count of attempted plays for the current note.
+ * @param {number} props.correctCount - The count of correct plays.
+ * @param {string} props.userNotes - The notes played by the user.
+ * @param {string} props.correctDegree - The correct degree for the current note.
+ * @param {string} props.chosenSong - The chosen song for learning.
+ * @param {string} props.instrument - The selected instrument for playing.
+ * @param {number} props.lowestDegree - The lowest degree in the melody.
+ * @param {boolean} props.pressedKey - Whether a key is pressed.
+ * @param {string} token - The authentication token.
+ * @returns {JSX.Element} The rendered SongNotes component.
+ */
 const SongNotes = (props) => {
     const degreeToFret = {1: 0, 2: 2, 3: 4, 4:5, 5:7, 6:9, 7:11, 8:12, 9: 14, 10: 16, 11:17, 12: 19, 13:21, 14: 23};
     const songKey = props.songKey;
@@ -18,7 +39,16 @@ const SongNotes = (props) => {
     const [userId, setUserId] = useState("");
     const { token } = useContext(AppContext);
 
-    // piano keys updates uesrnotes, then notes
+    /**
+   * Analyzes the pressed key and updates the user's progress.
+   * @function analyzePressedKey
+   * @param {string} props.note - The currently played note.
+   * @param {string} props.correctNote - The correct note for the current degree.
+   * @param {number} props.tryCount - The count of attempted plays for the current note.
+   * @fires setCurrentDegreeIndex
+   * @fires setCorrectCount
+   * @fires setTryCount
+   */
     const analyzePressedKey = () => {
       if (props.note !== "") {
         // compare played note to correct note
@@ -40,6 +70,20 @@ const SongNotes = (props) => {
       }
     };
 
+    /**
+   * Saves the user's progress to the database when the melody is completed.
+   * @async
+   * @function saveToDb
+   * @param {number} props.currentDegreeIndex - The index of the current melody degree.
+   * @param {number[]} props.melodyDegrees - The degrees of the melody in the song.
+   * @param {number} userId - user ID#
+   * @param {string} props.songKey - The key of the song (e.g., "C", "D#").
+   * @param {string} props.chosenSong - The chosen song for learning.
+   * @param {number} props.correctCount - The count of correct plays.
+   * @param {string[]} melodyNotes - Array of the notes of the melody
+   * @param {string} props.userNotes - The notes played by the user.
+   * @param {string} props.instrument - The selected instrument for playing.
+   */
     const saveToDb = async () => {
       if (props.currentDegreeIndex === props.melodyDegrees.length) {
         if (userId !== "") {
@@ -74,14 +118,25 @@ const SongNotes = (props) => {
       }
     }
 
+    /**
+     * call analyze function upon pressedKey change
+     *  */ 
     useEffect(()=>{
       analyzePressedKey();
     }, [props.pressedKey]);
+
+    /**
+     * call saveToDb when correct note is played which causes degree index to increase by 1
+     * saveToDb will only save if song is complete
+     */
 
     useEffect(()=>{
       saveToDb();
     }, [props.currentDegreeIndex]);
 
+    /**
+     * set correct current degree when user moves on to next note
+     */
     useEffect(()=>{
       if (props.currentDegreeIndex !== 0) {
           props.setCorrectDegree(props.melodyDegrees[props.currentDegreeIndex]); // 5
@@ -90,6 +145,9 @@ const SongNotes = (props) => {
       }
   }, [props.currentDegreeIndex])
       
+  /**
+   * converts correct degree (int) to correct note (string)
+   */
   useEffect(()=>{
       if (props.currentDegreeIndex !== 0) {
           props.setCorrectNote(allNotes[(degreeToFret[props.correctDegree] + allNotes.indexOf(props.songKey)) % 12]) // G
@@ -98,53 +156,52 @@ const SongNotes = (props) => {
       }
   }, [props.correctDegree])
   
-
+  /**
+   * resets when user changes the key, song, or instrument
+   */
   useEffect(()=>{
     props.reset();
   }, [props.songKey, props.chosenSong, props.instrument]);
 
 
-    useEffect(()=>{
-      const noteDivs = Array.from(document.querySelectorAll(".note"));
-      for (let i of noteDivs) {
-        if (props.colorsOn) {
-          i.style.color = "black"
-        } else {
-          i.style.color = i.textContent.charAt(i.textContent.length - 1) === "b" ? "white" : "black"
-        }
+  /**
+   * changes colors when user toggles colors on/off 
+   */
+  useEffect(()=>{
+    const noteDivs = Array.from(document.querySelectorAll(".note"));
+    for (let i of noteDivs) {
+      if (props.colorsOn) {
+        i.style.color = "black"
+      } else {
+        i.style.color = i.textContent.charAt(i.textContent.length - 1) === "b" ? "white" : "black"
       }
-    }, [props.colorsOn])
-
-    useEffect(()=>{
-      if (props.currentDegreeIndex !== 0 && props.currentDegreeIndex < props.melodyDegrees.length) {
-        document.querySelector(`#songNotes :nth-child(${props.currentDegreeIndex})`).classList.remove("currentNote")
-        document.querySelector(`#songNotes :nth-child(${props.currentDegreeIndex + 1})`).classList.add("currentNote")  
-      } else if (props.currentDegreeIndex < props.melodyDegrees.length) {
-        document.querySelector(`#songNotes :nth-child(${props.currentDegreeIndex + 1})`).classList.add("currentNote")  
-
-      }
-    }, [props.currentDegreeIndex]);
-
-    useEffect(() => {
-      if (token) {
-          const payload = jwt_token(token);
-          setUsername(payload.username);
-          setUserId(payload.userid);
-        }
-    }, []);
-    
-    const log = () =>{
-        console.log("XXXXXXXXXXXXXXXXXXXXX")
-        console.log("correct note", props.correctNote);
-        console.log("currentdegreeindex:", props.currentDegreeIndex);
-        console.log("correctdegree", props.correctDegree)
-        console.log("correct count:", props.correctCount);
-        console.log("trycount", props.tryCount);
-        console.log('usernotes', props.userNotes);
-        console.log(props.correctCount/props.melodyDegrees.length);
-        console.log("lowest degree", props.lowestDegree);
-        console.log("played note", props.note)
     }
+  }, [props.colorsOn])
+
+  /**
+   * highlights the current note for user to play
+   */
+  useEffect(()=>{
+    if (props.currentDegreeIndex !== 0 && props.currentDegreeIndex < props.melodyDegrees.length) {
+      document.querySelector(`#songNotes :nth-child(${props.currentDegreeIndex})`).classList.remove("currentNote")
+      document.querySelector(`#songNotes :nth-child(${props.currentDegreeIndex + 1})`).classList.add("currentNote")  
+    } else if (props.currentDegreeIndex < props.melodyDegrees.length) {
+      document.querySelector(`#songNotes :nth-child(${props.currentDegreeIndex + 1})`).classList.add("currentNote")  
+
+    }
+  }, [props.currentDegreeIndex]);
+
+  /**
+   * upon initial mount, sets username and userId
+   */
+  useEffect(() => {
+    if (token) {
+        const payload = jwt_token(token);
+        setUsername(payload.username);
+        setUserId(payload.userid);
+      }
+  }, []);
+    
     return (
       <>
                 {/* <button onClick={log}>log songnotes</button> */}
@@ -168,6 +225,20 @@ const SongNotes = (props) => {
                 <button id="closePopupButton">OK</button>
             </div>
         </div>
+        <div class="infoPopup">
+            <div class="infoPopupContent">
+                <h3>Welcome to the Song Notes page!</h3>
+                <p>You pick the song you want to learn. We will show you the notes to play</p>
+                <p>You pick the key you'd like to play in. By default it'll be C</p>
+                <p>The current note you should play will be <span style={{border: "1px solid black", outline: "1px solid yellow", borderRadius: "5px", padding: "2px"}}>highlighted black and yellow</span></p>
+                <p>To play a note, type the letter shown in (parenthesis) on each piano key / guitar fret</p>
+                <p>You can toggle between piano and guitar!</p>
+                <strong>Have fun!</strong>
+                <button id="closePopupButtonInfo" onClick={()=>{
+                    document.querySelector(".infoPopup").style.display="none"
+                }}>Let's Learn!</button>
+            </div>
+        </div>        
       </>
         
       );

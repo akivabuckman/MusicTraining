@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: GuitarNeck.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: GuitarNeck.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useEffect } from "react";
+import "./GuitarNeck.css"
+
+/**
+ * A component that represents a guitar neck with interactive frets and note playback.
+ *
+ * @component
+ * @param {Object} props - The properties passed to the component.
+ * @param {string} props.pressedKey - The currently pressed key.
+ * @param {boolean} props.nameBoxActive - Indicates whether the name box is active.
+ * @param {Object} props.colors - Object containing color codes for different notes.
+ * @param {boolean} props.colorsOn - Indicates whether color highlighting is active.
+ * @param {Function} props.setPressedKey - Function to update the pressed key.
+ * @param {Function} props.setNote - Function to update the currently played note.
+ * @param {Function} props.setUserNotes - Function to update the user's played notes.
+ * @param {Function} props.setUserTimes - Function to update the user's played note times.
+ * @param {Function} props.setNotesWithOctaves - Function to update notes with octaves.
+ * @param {Function} props.setColorsOn - Function to toggle color highlighting.
+ * @returns {JSX.Element} The rendered component.
+ */
+const GuitarNeck = (props) => {
+    /**
+     * Sets pressedKey prop upon key press
+     * @function handleKeyPress
+     * @param {object} e - key pressed by the user
+     * @fires setPressedKey
+     */
+    const handleKeyPress = (e) => {
+        if (e.key) {
+            props.setPressedKey(e.key.toLowerCase());
+        }
+    };
+
+    /**
+     * Resets pressedKey prop upon key release
+     * @function handleKeyRelease
+     * @param {object} e - key pressed by the user
+     * @fires setPressedKey
+     */
+    const handleKeyRelease = (e) => {
+        props.setPressedKey("")
+    };
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyPress);
+        window.addEventListener('keyup', handleKeyRelease)
+        // cleanup this component
+        return () => {
+          window.removeEventListener('keydown', handleKeyPress);
+          window.removeEventListener('keyup', handleKeyRelease)
+        };
+    }, []);
+
+    useEffect(()=>{ //when any key is pressed
+        if (props.pressedKey !== "" &amp;&amp; !props.nameBoxActive) {
+            handleKeyPressChange();
+        } else if (props.pressedKey === "") {
+            props.setNote("")
+        }
+    }, [props.pressedKey]);
+
+    /**
+     * Records the current timestamp when a note is played.
+     * Identifies the associated musical note and octave based on the pressed key and the fret's UI representation.
+     * Provides visual feedback by temporarily modifying the dimensions of the fret UI element.
+     * Plays the corresponding audio note using the associated audio file.
+     * Updates user-related data, including played notes and timestamps.
+     * @async
+     * @function handleKeyPressChange
+     * @param {string} props.pressedKey - The currently pressed key.
+     * @param {Function} props.setUserTimes - Function to update the user's played note times.
+     * @fires setUserNotes
+     * @fires setNote
+     * @fires setUserTimes
+     * @fires setNotesWithOctaves
+     */
+    const handleKeyPressChange = async () => { // shows note played in UI, plays note, and adds it to usernotes
+        let newNote;
+        let octave;
+        if (!["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/"].includes(props.pressedKey)) {
+            return
+        };
+        const a = new Date();
+        const noteTime = a.getTime();
+        
+        const allFrets = document.querySelectorAll(".fretText");
+        for (let i of allFrets) {
+            if (i.querySelector('p:nth-of-type(2)').textContent.charAt(1).toLowerCase() === props.pressedKey) {
+                newNote = i.getElementsByTagName("p")[0].textContent;
+                octave = i.getAttribute("octave");
+                i.style.height = "100px";
+                i.style.width = "70px"
+                setTimeout(() => {
+                    i.style.height = "60px";
+                    i.style.width = "50px"
+                }, 500);
+            }
+        }
+
+        try {
+            const sound = require(`../guitarSounds/${newNote}${parseInt(octave)}.mp3`);
+            const audio = new Audio(sound);
+            audio.play();
+        } catch(error) {console.log(error)};
+        // add note to user's played notes
+        props.setUserNotes([ ...props.userNotes, newNote]);
+        props.setNote(newNote);
+        if (props.setUserTimes) {props.setUserTimes([...props.userTimes, noteTime])};
+        if (props.setNotesWithOctaves) {props.setNotesWithOctaves([...props.notesWithOctaves, `${newNote}${octave}`])}
+    }
+    
+    /**
+     * Toggles color highlighting on the guitar neck simulation.
+     * @function toggle
+     * @param {boolean} props.colorsOn - Indicates whether color highlighting is active.
+     * @fires setColorsOn
+     */
+    function toggle() {
+        let toggle = document.querySelector('.toggle')
+        props.setColorsOn(i=> !i);
+
+        // colorsOff
+        if (props.colorsOn) {
+            toggle.classList.remove('active')
+            const flatDivs = Array.from(document.querySelectorAll('.flat'));
+            for (let i of flatDivs) {
+                i.querySelectorAll("p")[0].setAttribute("style","color: white;")
+                i.querySelectorAll("p")[1].setAttribute("style","color: white;")
+                i.setAttribute("style", "border: 1px solid white")
+            }
+            const naturalDivs = Array.from(document.querySelectorAll('div.text:not(.flat)'))
+            for (let i of naturalDivs) {
+                i.setAttribute("style", "border: 1px solid black")
+            }
+        } else {
+            // colors ON
+            toggle.classList.add('active');
+            const flatDivs = Array.from(document.querySelectorAll('.flat'));
+            for (let i of flatDivs) {
+                i.querySelectorAll("p")[0].setAttribute("style","color: black;")
+                i.querySelectorAll("p")[1].setAttribute("style","color: black;")
+                i.setAttribute("style", "border: 1px solid black");
+            }
+            const naturalDivs = Array.from(document.querySelectorAll('div.text:not(.flat)'))
+            for (let i of naturalDivs) {
+                i.setAttribute("style", "border: 1px solid black")
+            }
+        }        
+    }
+
+    return(
+
+        &lt;div id="guitarNeckDiv">
+            &lt;div className="container">
+                &lt;p className="text">Colors: &lt;/p>
+                &lt;div className="toggle active" onClick={toggle}>
+                    &lt;div className="circle">&lt;/div>
+                &lt;/div>
+            &lt;/div>
+            &lt;div id="neck">
+            &lt;div className="string">
+                &lt;div className="fret open">
+                    &lt;div className="fretText" octave="4" style={{backgroundColor: `rgb${props.colors["E"]}`}}>
+                        &lt;p>E&lt;/p>
+                        &lt;p>(1)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText" octave="4" style={{backgroundColor: `rgb${props.colors["F"]}`}}>
+                        &lt;p>F&lt;/p>
+                        &lt;p>(2)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText flat" octave="4" style={{backgroundColor: `rgb${props.colors["Gb"]}`}}>
+                        &lt;p>Gb&lt;/p>
+                        &lt;p>(33)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText" octave="4" style={{backgroundColor: `rgb${props.colors["G"]}`}}>
+                        &lt;p>G&lt;/p>
+                        &lt;p>(4)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText flat" octave="4" style={{backgroundColor: `rgb${props.colors["Ab"]}`}}>
+                        &lt;p>Ab&lt;/p>
+                        &lt;p>(5)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText" octave="4" style={{backgroundColor: `rgb${props.colors["A"]}`}}>
+                        &lt;p>A&lt;/p>
+                        &lt;p>(6)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText flat" octave="4" style={{backgroundColor: `rgb${props.colors["Bb"]}`}}>
+                        &lt;p>Bb&lt;/p>
+                        &lt;p>(7)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText" octave="4" style={{backgroundColor: `rgb${props.colors["B"]}`}}>
+                        &lt;p>B&lt;/p>
+                        &lt;p>(8)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText" octave="5" style={{backgroundColor: `rgb${props.colors["C"]}`}}>
+                        &lt;p>C&lt;/p>
+                        &lt;p>(9)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText flat" octave="5" style={{backgroundColor: `rgb${props.colors["Db"]}`}}>
+                        &lt;p>Db&lt;/p>
+                        &lt;p>(0)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+
+            &lt;/div>
+            &lt;div className="string">
+                &lt;div className="fret open">
+                    &lt;div className="fretText" octave="3" style={{backgroundColor: `rgb${props.colors["B"]}`}}>
+                        &lt;p>B&lt;/p>
+                        &lt;p>(Q)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText" octave="4" style={{backgroundColor: `rgb${props.colors["C"]}`}}>
+                        &lt;p>C&lt;/p>
+                        &lt;p>(W)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText flat" octave="4" style={{backgroundColor: `rgb${props.colors["Db"]}`}}>
+                        &lt;p>Db&lt;/p>
+                        &lt;p>(E)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText" octave="4" style={{backgroundColor: `rgb${props.colors["D"]}`}}>
+                        &lt;p>D&lt;/p>
+                        &lt;p>(R)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText flat" octave="4" style={{backgroundColor: `rgb${props.colors["Eb"]}`}}>
+                        &lt;p>Eb&lt;/p>
+                        &lt;p>(T)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText" octave="4" style={{backgroundColor: `rgb${props.colors["E"]}`}}>
+                        &lt;p>E&lt;/p>
+                        &lt;p>(Y)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText" octave="4" style={{backgroundColor: `rgb${props.colors["F"]}`}}>
+                        &lt;p>F&lt;/p>
+                        &lt;p>(U)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                &lt;div className="circleDiv">&lt;/div>
+                    &lt;div className="fretText flat" octave="4" style={{backgroundColor: `rgb${props.colors["Gb"]}`}}>
+                        &lt;p>Gb&lt;/p>
+                        &lt;p>(I)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText" octave="4" style={{backgroundColor: `rgb${props.colors["G"]}`}}>
+                        &lt;p>G&lt;/p>
+                        &lt;p>(O)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText flat" octave="4" style={{backgroundColor: `rgb${props.colors["Ab"]}`}}>
+                        &lt;p>Ab&lt;/p>
+                        &lt;p>(P)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+
+            &lt;/div>
+            &lt;div className="string">
+                &lt;div className="fret open">
+                    &lt;div className="fretText" octave="3" style={{backgroundColor: `rgb${props.colors["G"]}`}}>
+                        &lt;p>G&lt;/p>
+                        &lt;p>(A)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText flat" octave="3" style={{backgroundColor: `rgb${props.colors["Ab"]}`}}>
+                        &lt;p>Ab&lt;/p>
+                        &lt;p>(S)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText" octave="3" style={{backgroundColor: `rgb${props.colors["A"]}`}}>
+                        &lt;p>A&lt;/p>
+                        &lt;p>(D)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="circleDiv">&lt;/div>
+                    &lt;div className="fretText flat" octave="3" style={{backgroundColor: `rgb${props.colors["Bb"]}`}}>
+                        &lt;p>Bb&lt;/p>
+                        &lt;p>(F)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText" octave="3" style={{backgroundColor: `rgb${props.colors["B"]}`}}>
+                        &lt;p>B&lt;/p>
+                        &lt;p>(G)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="circleDiv">&lt;/div>
+                    &lt;div className="fretText" octave="4" style={{backgroundColor: `rgb${props.colors["C"]}`}}>
+                        &lt;p>C&lt;/p>
+                        &lt;p>(H)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText flat" octave="4" style={{backgroundColor: `rgb${props.colors["Db"]}`}}>
+                        &lt;p>Db&lt;/p>
+                        &lt;p>(J)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText" octave="4" style={{backgroundColor: `rgb${props.colors["D"]}`}}>
+                        &lt;p>D&lt;/p>
+                        &lt;p>(K)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText flat" octave="4" style={{backgroundColor: `rgb${props.colors["Eb"]}`}}>
+                        &lt;p>Eb&lt;/p>
+                        &lt;p>(L)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText" octave="4" style={{backgroundColor: `rgb${props.colors["E"]}`}}>
+                        &lt;p>E&lt;/p>
+                        &lt;p>(;)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+            &lt;/div>
+           
+            &lt;div className="string">
+                &lt;div className="fret open">
+                    &lt;div className="fretText" octave="3" style={{backgroundColor: `rgb${props.colors["D"]}`}}>
+                        &lt;p>D&lt;/p>
+                        &lt;p>(Z)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText flat" octave="3" style={{backgroundColor: `rgb${props.colors["Eb"]}`}}>
+                        &lt;p>Eb&lt;/p>
+                        &lt;p>(X)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText" octave="3" style={{backgroundColor: `rgb${props.colors["E"]}`}}>
+                        &lt;p>E&lt;/p>
+                        &lt;p>(C)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText" octave="3" style={{backgroundColor: `rgb${props.colors["F"]}`}}>
+                        &lt;p>F&lt;/p>
+                        &lt;p>(V)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText flat" octave="3" style={{backgroundColor: `rgb${props.colors["Gb"]}`}}>
+                        &lt;p>Gb&lt;/p>
+                        &lt;p>(B)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText" octave="3" style={{backgroundColor: `rgb${props.colors["G"]}`}}>
+                        &lt;p>G&lt;/p>
+                        &lt;p>(N)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText flat" octave="3" style={{backgroundColor: `rgb${props.colors["Ab"]}`}}>
+                        &lt;p>Ab&lt;/p>
+                        &lt;p>(M)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="circleDiv">&lt;/div>
+                    &lt;div className="fretText" octave="3" style={{backgroundColor: `rgb${props.colors["A"]}`}}>
+                        &lt;p>A&lt;/p>
+                        &lt;p>(,)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText flat" octave="3" style={{backgroundColor: `rgb${props.colors["Bb"]}`}}>
+                        &lt;p>Bb&lt;/p>
+                        &lt;p>(.)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+                &lt;div className="fret">
+                    &lt;div className="fretText" octave="3" style={{backgroundColor: `rgb${props.colors["B"]}`}}>
+                        &lt;p>B&lt;/p>
+                        &lt;p>(/)&lt;/p>    
+                    &lt;/div>
+                &lt;/div>
+            &lt;/div>
+            
+            
+            
+        &lt;/div>
+        &lt;div id="fretNumDiv">
+            &lt;div className="fretNum open">0&lt;/div>
+            &lt;div className="fretNum">1&lt;/div>
+            &lt;div className="fretNum">2&lt;/div>
+            &lt;div className="fretNum">3&lt;/div>
+            &lt;div className="fretNum">4&lt;/div>
+            &lt;div className="fretNum">5&lt;/div>
+            &lt;div className="fretNum">6&lt;/div>
+            &lt;div className="fretNum">7&lt;/div>
+            &lt;div className="fretNum">8&lt;/div>
+            &lt;div className="fretNum">9&lt;/div>
+        &lt;/div>
+        &lt;/div>
+    )
+};
+
+export default GuitarNeck</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#GuitarNeck">GuitarNeck</a></li><li><a href="global.html#PianoKeys">PianoKeys</a></li><li><a href="global.html#displayNotes">displayNotes</a></li><li><a href="global.html#handleKeyPress">handleKeyPress</a></li><li><a href="global.html#handleKeyPressChange">handleKeyPressChange</a></li><li><a href="global.html#handleKeyRelease">handleKeyRelease</a></li><li><a href="global.html#toggle">toggle</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Aug 15 2023 15:41:05 GMT+0300 (Israel Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

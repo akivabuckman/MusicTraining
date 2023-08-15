@@ -1,10 +1,10 @@
 import "./musicComponents/SongNotes/SongNotes.css"
-import GuitarNeck from './musicComponents/GuitarNeck';
+import GuitarNeck from './musicComponents/instruments/GuitarNeck';
 import SongNotes from './musicComponents/SongNotes/SongNotes';
 import { useState, useEffect, useContext } from "react";
 import melodies from "./melodies";
 import SongNotesInfoPane from './musicComponents/SongNotes/SongNotesInfoPane';
-import PianoKeys from './musicComponents/PianoKeys';
+import PianoKeys from './musicComponents/instruments/PianoKeys';
 import "./StatsApp.css"
 
 

@@ -1,15 +1,12 @@
 import { useState, useEffect, useContext } from "react";
-import PianoKeys from "./musicComponents/PianoKeys";
+import PianoKeys from "./musicComponents/instruments/PianoKeys";
 import FreestyleInfo from "./musicComponents/Freestyle/FreestyleInfo";
 import FreestyleNotes from "./musicComponents/Freestyle/FreestyleNotes"
-import GuitarNeck from "./musicComponents/GuitarNeck";
+import GuitarNeck from "./musicComponents/instruments/GuitarNeck";
 
 const FreestyleApp = (props) => {
-    const allNotes = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
-    const degreeToFret = {1: 0, 2: 2, 3: 4, 4:5, 5:7, 6:9, 7:11, 8:12, 9: 14, 10: 16, 11:17, 12: 19, 13:21, 14: 23};
     const [userNotes, setUserNotes] = useState([]);
     const [instrument, setInstrument] = useState("piano");
-    const [generatedNotes, setGeneratedNotes] = useState([]);
     const [aKeyNote, setaKeyNote] = useState("");
     const [aKeyIndex, setaKeyIndex] = useState(0);
     const [colorsOn, setColorsOn] = useState(true);

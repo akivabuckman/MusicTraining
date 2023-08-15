@@ -1,11 +1,32 @@
 import { useState, useEffect } from "react";
 import "./PianoKeys.css"
 
-
+/**
+ * PianoKeys Component
+ *
+ * @component
+ * @param {Object} props - The properties passed to the component.
+ * @param {string} props.pressedKey - The currently pressed key.
+ * @param {boolean} props.nameBoxActive - Indicates whether the name box is active.
+ * @param {Object} props.colors - Object containing color codes for different notes.
+ * @param {boolean} props.colorsOn - Indicates whether color highlighting is active.
+ * @param {Function} props.setPressedKey - Function to update the pressed key.
+ * @param {Function} props.setNote - Function to update the currently played note.
+ * @param {Function} props.setUserNotes - Function to update the user's played notes.
+ * @param {Function} props.setUserTimes - Function to update the user's played note times.
+ * @param {Function} props.setNotesWithOctaves - Function to update notes with octaves.
+ * @param {Function} props.setColorsOn - Function to toggle color highlighting.
+ * @param {string} props.lowestNote - The lowest note in the current song.
+ * @param {string} props.songKey - The key of the current song.
+ * @param {number} props.lowestDegree - The lowest degree of the current song.
+ * @param {boolean} props.aKeyIndex - The index of the A key.
+ * @param {Function} props.setLowestNote - Function to update the lowest note.
+ * @param {Function} props.setaKeyNote - Function to update the A key note.
+ * @returns {JSX.Element} The rendered component.
+ */
 const PianoKeys = (props) => {
     const allNotes = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
     const degreeToFret = {1: 0, 2: 2, 3: 4, 4:5, 5:7, 6:9, 7:11, 8:12, 9: 14, 10: 16, 11:17, 12: 19, 13:21, 14: 23};
-    // const [down, setDown] = useState(false)
 
     const [sharpTexts, setSharpTexts] = useState({
         "wKey": "",
@@ -58,16 +79,30 @@ const PianoKeys = (props) => {
     const flatNotes = ["Db", "Eb", "", "Gb", "Ab", "Bb", ""]
     const notesSharp = {0:"C", 1: "C#", 2: "D", 3: "D#", 4: "E", 5: "F", 6: "F#", 7: "G", 8: "G#", 9: "A", 10: "A#", 11: "B"}
 
+    /**
+     * set lowest note upon songkey change
+     */
     useEffect(()=>{
         if (props.songKey) {
             props.setLowestNote(allNotes[(degreeToFret[props.lowestDegree] + allNotes.indexOf(props.songKey)) % 12]);
         }
     }, [props.songKey]);
 
+    /**
+     * call displayNotes upon lowest note change
+     */
     useEffect(()=>{
         displayNotes()
     }, [props.lowestNote]);
 
+    /**
+     * Displays piano notes, dependent on the lowest note to be displayed
+     * @function displayNotes
+     * @param {string} props.lowestNote - The lowest note in the current song.
+     * @fires setNaturalTexts
+     * @fires setSharpTexts
+     * @fires setFlatTexts
+     */
     const displayNotes = () => {
         const firstNaturalNote = naturalNotes.includes(props.lowestNote) ? props.lowestNote : allNotes[(allNotes.indexOf(props.lowestNote) - 1) % 12];
         const firstNaturalIndex = naturalNotes.indexOf(firstNaturalNote);
@@ -93,9 +128,7 @@ const PianoKeys = (props) => {
             const firstNaturalNote = naturalNotes.includes(props.lowestNote) ? props.lowestNote : allNotes[(allNotes.indexOf(props.lowestNote) - 1) % 12];
             const firstNaturalIndex = naturalNotes.indexOf(firstNaturalNote);
             const firstSharpNote = sharpNotes[(firstNaturalIndex - 1) % 6];
-            const firstFlatNote = flatNotes[(firstNaturalIndex - 1) % 6];
             const firstSharpNoteIndex = sharpNotes.indexOf(firstSharpNote);
-            const firstFlatNoteIndex = flatNotes.indexOf(firstFlatNote);
 
             setSharpTexts(
                 {
@@ -119,9 +152,7 @@ const PianoKeys = (props) => {
     useEffect(()=>{
         const firstNaturalNote = naturalNotes.includes(props.lowestNote) ? props.lowestNote : allNotes[(allNotes.indexOf(props.lowestNote) - 1) % 12];
         const firstNaturalIndex = naturalNotes.indexOf(firstNaturalNote);
-        const firstSharpNote = sharpNotes[(firstNaturalIndex - 1) % 6];
         const firstFlatNote = flatNotes[(firstNaturalIndex - 1) % 6];
-        const firstSharpNoteIndex = sharpNotes.indexOf(firstSharpNote);
         const firstFlatNoteIndex = flatNotes.indexOf(firstFlatNote);
 
         setFlatTexts(
@@ -174,17 +205,30 @@ const PianoKeys = (props) => {
         };
     }, []);
     
-    // event listener for key presses
+    /**
+     * Changes prop pressedKey upon key press
+     * @function handleKeyPress
+     * @param {object} e - user pressed key
+     * @fires setPressedKey
+     */
     const handleKeyPress = (e) => {
-        let key = e.key;
         props.setPressedKey(e.key.toLowerCase());
     };
 
+     /**
+     * Changes prop pressedKey upon key press
+     * @function handleKeyRelease
+     * @param {object} e - user released a key
+     * @fires setPressedKey
+     */
     const handleKeyRelease = (e) => {
         props.setPressedKey("")
     };
 
-    useEffect(()=>{ //when any key is pressed
+    /**
+     * when any key is pressed
+     */
+    useEffect(()=>{
         if (props.pressedKey !== "" && !props.nameBoxActive) {
             handleKeyPressChange();
         } else if (props.pressedKey === "") {
@@ -192,6 +236,19 @@ const PianoKeys = (props) => {
         }
     }, [props.pressedKey]);
 
+    /**
+     * Determine newNote based on the pressed key: Maps pressed keys to musical notes (natural or flat).
+     * Visual feedback: Adjusts the size of the UI key representation briefly for visual feedback.
+     * Timing and Sound: Calculates the octave based on key type, plays the note's audio, and adds the note to user notes.
+     * Update State: Sets newNote as the played note, updates user note time and notes with octaves.
+     * @async
+     * @function handleKeyPressChange
+     * @param {string} props.pressedKey - The currently pressed key.
+     * @fires setUserNotes
+     * @fires setUserTimes
+     * @fires setNote
+     * @fires setNotesWithOctaves
+     */
     const handleKeyPressChange = async () => { // shows note played in UI, plays note, and adds it to usernotes
         let newNote;
         if (["a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'"].includes(props.pressedKey)){
@@ -227,7 +284,7 @@ const PianoKeys = (props) => {
             const noteIndex = naturalNotes.indexOf(newNote);
             octave = noteIndex >= AKeyNaturalIndex ? 3 : 4;
             try {
-                const sound = require(`./sounds/${newNote}${parseInt(octave)}.mp3`);
+                const sound = require(`../sounds/${newNote}${parseInt(octave)}.mp3`);
                 const audio = new Audio(sound);
                 audio.play();
             } catch(error) {console.log(error)};
@@ -239,7 +296,7 @@ const PianoKeys = (props) => {
             const noteIndex = naturalNotes.indexOf(newNote);
             octave = noteIndex >= AKeyNaturalIndex ? 4 : 5;
             try {
-                const sound = require(`./sounds/${newNote}${parseInt(octave)}.mp3`);
+                const sound = require(`../sounds/${newNote}${parseInt(octave)}.mp3`);
                 const audio = new Audio(sound);
                 audio.play();
             } catch(error) {console.log(error)};
@@ -250,7 +307,7 @@ const PianoKeys = (props) => {
             const noteIndex = allNotes.indexOf(newNote);
             octave = noteIndex >= allNotes.indexOf(props.lowestNote) ? 3 : 4;
             try {
-                const sound = require(`./sounds/${newNote}${parseInt(octave)}.mp3`);
+                const sound = require(`../sounds/${newNote}${parseInt(octave)}.mp3`);
                 const audio = new Audio(sound);
                 audio.play();
             } catch(error) {};
@@ -261,7 +318,7 @@ const PianoKeys = (props) => {
             const noteIndex = allNotes.indexOf(newNote);
             octave = noteIndex >= allNotes.indexOf(props.lowestNote) ? 4 : 5;
             try {
-                const sound = require(`./sounds/${newNote}${parseInt(octave)}.mp3`);
+                const sound = require(`../sounds/${newNote}${parseInt(octave)}.mp3`);
                 const audio = new Audio(sound);
                 audio.play();
             } catch(error) {};
@@ -274,13 +331,21 @@ const PianoKeys = (props) => {
         if (props.setNotesWithOctaves) {props.setNotesWithOctaves([...props.notesWithOctaves, `${newNote}${octave}`])}
     }
 
-    useEffect(()=>{ // display notes upon first mount
+    /**
+     * display notes upon first mount
+     */
+    useEffect(()=>{
         props.setaKeyNote(notesSharp[props.aKeyIndex]);
         displayNotes();
     }, []);
 
     
-// color toggle button
+    /**
+     * color toggle
+     * @function toggle
+     * @param {boolean} props.colorsOn - Indicates whether color highlighting is active.
+     * @fires setColorsOn
+     */
     function toggle() {
         let toggle = document.querySelector('.toggle')
         props.setColorsOn(i=> !i);

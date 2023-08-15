@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: FreestyleInfo.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: FreestyleInfo.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect, useContext } from 'react';
+import { AppContext } from "../../App";
+import jwt_token from "jwt-decode";
+import { Link } from 'react-router-dom';
+// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+/**
+ * Component for displaying freestyle information and actions.
+ *
+ * @component
+ * @param {object} props - The properties passed to the component.
+ * @param {function} props.setLowestNote - Function to set the lowest note.
+ * @param {function} props.setInstrument - Function to set the instrument.
+ * @param {string} props.instrument - The selected instrument.
+ * @param {string} props.lowestNote - The lowest note.
+ * @param {function} props.reset - Function to reset.
+ * @param {Array} props.userNotes - Array of user notes.
+ * @param {Array} props.userTimes - Array of timestamps of each played note.
+ * @param {Array} props.notesWithOctaves - Array of notes with octaves.
+ * @param {boolean} props.setNameBoxActive - Function to set name box active.
+ * @returns {JSX.Element} - JSX elements representing song info.
+ */
+const FreestyleInfo = (props) => {
+    const [username, setUsername] = useState("");
+    const [userId, setUserId] = useState("");
+    const { token } = useContext(AppContext);
+    const allNotes = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
+
+    /**
+     * If user changes the lowest note on the piano, the piano will adjust accordingly.
+     * @function handleLowestNoteChange
+     * @param {object} event - Event object when user changes lowest note.
+     */
+    const handleLowestNoteChange = (event) => {
+        props.setLowestNote(event.target.value)
+    };
+
+    /**
+     * If user changes instrument, the instrument prop is set.
+     * @function handleInstrumentChange
+     * @param {object} event - Event object when user changes instrument.
+     */
+    const handleInstrumentChange = (event) => {
+        props.setInstrument(event.target.value.toLowerCase())
+    };
+
+    /**
+     * This function gets the chosen song name, and adds it to the database if the user is logged in.
+     * @async
+     * @function saveSong
+     * @param {number} userId - user ID#
+     * @param {string} songNameInput - user defined song name
+     * @param {Array} props.userNotes - Array of user notes
+     * @param {Array} props.userTimes - Array of timestamps of each played note.
+     * @param {Array} props.notesWithOctaves - Array of notes with octaves.
+     */
+    const saveSong = async () => {
+        // check if song name is entered
+        const songNameInput = document.querySelector("#songNameInput");
+        if (songNameInput.value === "") {
+            songNameInput.setAttribute("placeholder", "ENTER SONG NAME");
+            songNameInput.setAttribute("style", "border: 5px solid red")
+        } else {
+            if (token) {
+            // add to database
+            try {
+                const data = JSON.stringify({
+                  user_id: userId,
+                  song_length: props.userNotes.length,
+                  user_notes: props.userNotes,
+                  song_name: songNameInput.value,
+                  user_times: props.userTimes,
+                  notes_octaves: props.notesWithOctaves
+                })
+                const res = await fetch("/music/userSong", {
+                  method: "POST",
+                  headers: {"content-type": "application/json"},
+                  body: data,
+                });
+                const parsedData = await res.json();
+
+                // popup box
+                document.querySelector("#popupContainerG").style.display = "block";
+                document.querySelector("#dynamicText").innerHTML = `&lt;p>&lt;strong>${songNameInput.value}&lt;/strong> sounds awesome and it has been saved. You can see it in your stats.&lt;/p>`
+                document.querySelector("#closePopupButtonG").addEventListener("click", () => {
+                document.querySelector("#popupContainerG").style.display = "none" })
+              } catch (error) {
+                console.log(error)
+              }    
+            } else {
+                // if not logged in, just display popup box
+                document.querySelector("#popupContainer").style.display = "block";
+                document.querySelector("#closePopupButton").addEventListener("click", () => {
+                document.querySelector("#popupContainer").style.display = "none"
+                });
+            };
+        }
+    }
+
+    /**
+     * Event listener - if name box (where user inputs song name) is active, deactivate the instrument when user types.
+     * @function useEffectUponInitialMount
+     * @fires setNameBoxActive
+     */
+    useEffect(()=>{
+        const nameBox = document.querySelector("#songNameInput");
+        const activateNameBox = () => {
+            props.setNameBoxActive(true)
+        };
+
+        const deactivateNameBox = () => {
+            props.setNameBoxActive(false)
+        };
+
+        // Add event listener when user navigates to Freestyle page
+        nameBox.addEventListener("focus", activateNameBox);
+        nameBox.addEventListener("blur", deactivateNameBox);
+
+        // remove event listener when user navigates away from Freestyle page
+        return () => {
+            nameBox.removeEventListener("focus", activateNameBox);
+            nameBox.removeEventListener("blur", deactivateNameBox);
+        }
+    }, [])
+
+    /**
+    * Authentication function upon page startup.
+    * @function useEffectUponTokenMount
+    * @param {string} token - secret generated token
+    * @fires setUserId
+    * @fires setUsername
+    */
+    useEffect(() => {
+        if (token) {
+            const payload = jwt_token(token);
+            setUsername(payload.username);
+            setUserId(payload.userid);
+          }
+    }, [token]);
+    
+    return (
+        &lt;>
+        &lt;div id="FreestyleInfoPaneDiv" className="info-pane">
+            &lt;div id="titleDiv">
+                &lt;h3 id="title">Freestyle&lt;/h3>
+                &lt;h4>Play around and have fun!&lt;/h4>
+            &lt;/div>
+            &lt;div id="data">
+                &lt;p>Instrument: 
+                &lt;select onChange={handleInstrumentChange}>
+                    &lt;option key="Piano" value="Piano">Piano&lt;/option>
+                    &lt;option key="Guitar" value="Guitar">Guitar&lt;/option>
+                &lt;/select>
+            &lt;/p>
+            {
+                props.instrument === "piano" ? 
+                &lt;p>Lowest Note:
+                    &lt;select value={props.lowestNote} onChange={handleLowestNoteChange}>
+                        {allNotes.map((i) => (
+                            &lt;option key={i} value={i}>
+                                {i}
+                            &lt;/option>
+                        ))}
+                    &lt;/select>
+                &lt;/p>
+                :
+                null
+            }
+            
+            &lt;button onClick={props.reset}>Start Over&lt;/button>
+            &lt;input id="songNameInput" name="song_name" type="text" placeholder='Enter Song Name'>&lt;/input>
+            &lt;button onClick={saveSong}>Save&lt;/button>
+        &lt;/div>
+            &lt;/div>
+            
+        &lt;div id="popupContainer" className="popup-container">
+              &lt;div className="popup">
+                  &lt;p>You need to &lt;Link to="../login">log in&lt;/Link> or &lt;Link to="../register">register&lt;/Link> to save your songs&lt;/p>
+                  &lt;button id="closePopupButton">OK&lt;/button>
+              &lt;/div>
+        &lt;/div>
+        &lt;div id="popupContainerG" className="popup-containerG">
+            &lt;div className="popupG">
+                &lt;div id="dynamicText">&lt;/div>
+                &lt;button id="closePopupButtonG">OK&lt;/button>
+            &lt;/div>
+        &lt;/div>
+        &lt;div class="infoPopup">
+            &lt;div class="infoPopupContent">
+                &lt;h3>Welcome to the Freestyle page!&lt;/h3>
+                &lt;p>To play a note, type the letter shown in (parenthesis) on each piano key / guitar fret&lt;/p>
+                &lt;p>For example, press the "S" key to play a musical D note&lt;/p>
+                &lt;p>You can toggle between piano and guitar!&lt;/p>
+                &lt;strong>Have fun!&lt;/strong>
+                &lt;button id="closePopupButtonInfo" onClick={()=>{
+                    document.querySelector(".infoPopup").style.display="none"
+                }}>Let's Jam!&lt;/button>
+            &lt;/div>
+        &lt;/div>
+
+        &lt;/>
+        
+    );
+};
+
+export default FreestyleInfo;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#FreestyleInfo">FreestyleInfo</a></li><li><a href="global.html#FreestyleNotes">FreestyleNotes</a></li><li><a href="global.html#handleInstrumentChange">handleInstrumentChange</a></li><li><a href="global.html#handleLowestNoteChange">handleLowestNoteChange</a></li><li><a href="global.html#saveSong">saveSong</a></li><li><a href="global.html#useEffectUponColorToggle">useEffectUponColorToggle</a></li><li><a href="global.html#useEffectUponInitialMount">useEffectUponInitialMount</a></li><li><a href="global.html#useEffectUponTokenMount">useEffectUponTokenMount</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Aug 15 2023 14:41:01 GMT+0300 (Israel Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

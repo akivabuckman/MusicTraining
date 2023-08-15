@@ -1,14 +1,42 @@
-import { useState, useEffect, useContext } from "react";
+import { useEffect } from "react";
 import "./GuitarNeck.css"
 
+/**
+ * A component that represents a guitar neck with interactive frets and note playback.
+ *
+ * @component
+ * @param {Object} props - The properties passed to the component.
+ * @param {string} props.pressedKey - The currently pressed key.
+ * @param {boolean} props.nameBoxActive - Indicates whether the name box is active.
+ * @param {Object} props.colors - Object containing color codes for different notes.
+ * @param {boolean} props.colorsOn - Indicates whether color highlighting is active.
+ * @param {Function} props.setPressedKey - Function to update the pressed key.
+ * @param {Function} props.setNote - Function to update the currently played note.
+ * @param {Function} props.setUserNotes - Function to update the user's played notes.
+ * @param {Function} props.setUserTimes - Function to update the user's played note times.
+ * @param {Function} props.setNotesWithOctaves - Function to update notes with octaves.
+ * @param {Function} props.setColorsOn - Function to toggle color highlighting.
+ * @returns {JSX.Element} The rendered component.
+ */
 const GuitarNeck = (props) => {
+    /**
+     * Sets pressedKey prop upon key press
+     * @function handleKeyPress
+     * @param {object} e - key pressed by the user
+     * @fires setPressedKey
+     */
     const handleKeyPress = (e) => {
         if (e.key) {
             props.setPressedKey(e.key.toLowerCase());
-
         }
     };
 
+    /**
+     * Resets pressedKey prop upon key release
+     * @function handleKeyRelease
+     * @param {object} e - key pressed by the user
+     * @fires setPressedKey
+     */
     const handleKeyRelease = (e) => {
         props.setPressedKey("")
     };
@@ -31,7 +59,21 @@ const GuitarNeck = (props) => {
         }
     }, [props.pressedKey]);
 
-
+    /**
+     * Records the current timestamp when a note is played.
+     * Identifies the associated musical note and octave based on the pressed key and the fret's UI representation.
+     * Provides visual feedback by temporarily modifying the dimensions of the fret UI element.
+     * Plays the corresponding audio note using the associated audio file.
+     * Updates user-related data, including played notes and timestamps.
+     * @async
+     * @function handleKeyPressChange
+     * @param {string} props.pressedKey - The currently pressed key.
+     * @param {Function} props.setUserTimes - Function to update the user's played note times.
+     * @fires setUserNotes
+     * @fires setNote
+     * @fires setUserTimes
+     * @fires setNotesWithOctaves
+     */
     const handleKeyPressChange = async () => { // shows note played in UI, plays note, and adds it to usernotes
         let newNote;
         let octave;
@@ -56,7 +98,7 @@ const GuitarNeck = (props) => {
         }
 
         try {
-            const sound = require(`./guitarSounds/${newNote}${parseInt(octave)}.mp3`);
+            const sound = require(`../guitarSounds/${newNote}${parseInt(octave)}.mp3`);
             const audio = new Audio(sound);
             audio.play();
         } catch(error) {console.log(error)};
@@ -67,6 +109,12 @@ const GuitarNeck = (props) => {
         if (props.setNotesWithOctaves) {props.setNotesWithOctaves([...props.notesWithOctaves, `${newNote}${octave}`])}
     }
     
+    /**
+     * Toggles color highlighting on the guitar neck simulation.
+     * @function toggle
+     * @param {boolean} props.colorsOn - Indicates whether color highlighting is active.
+     * @fires setColorsOn
+     */
     function toggle() {
         let toggle = document.querySelector('.toggle')
         props.setColorsOn(i=> !i);
