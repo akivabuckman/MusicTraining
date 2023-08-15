@@ -13,6 +13,7 @@ const Navbar = (props) => {
   const [username, setUsername] = useState("");
   const [userId, setUserId] = useState("");
   const { token } = useContext(AppContext);
+  const { setToken } = useContext(AppContext);
   const navigate = useNavigate();
 
 
@@ -20,6 +21,7 @@ const Navbar = (props) => {
     try {
       const res = await axios.delete("/users/logout");
       if (res.status === 200) {
+        setToken(null);
         navigate("/login");
       }
     } catch (e) {
@@ -32,6 +34,9 @@ const Navbar = (props) => {
         const payload = jwt_token(token);
         setUsername(payload.username);
         setUserId(payload.userid);
+      } else {
+        setUsername(null);
+        setUserId(null)
       }
   }, [token]);
 

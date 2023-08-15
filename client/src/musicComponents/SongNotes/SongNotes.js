@@ -2,6 +2,8 @@ import { useState, useEffect, useContext } from "react";
 import "./SongNotes.css"
 import { AppContext } from "../../App";
 import jwt_token from "jwt-decode";
+import { Link } from 'react-router-dom';
+
 
 const SongNotes = (props) => {
     const degreeToFret = {1: 0, 2: 2, 3: 4, 4:5, 5:7, 6:9, 7:11, 8:12, 9: 14, 10: 16, 11:17, 12: 19, 13:21, 14: 23};
@@ -160,7 +162,7 @@ const SongNotes = (props) => {
                 <p>You nailed {props.correctCount} out of {props.melodyDegrees.length} notes.</p>
                 <p>For a score of {Math.round(props.correctCount/props.melodyDegrees.length*100)}%</p>
                 {
-                  userId === "" ? null : (<p>Your progess has been saved</p>)
+                  userId === "" ? <p>If you <Link to="../login">log in</Link> or <Link to="../register">register</Link> you can save your progress</p> : (<p>Your progess has been saved</p>)
                 }
                 
                 <button id="closePopupButton">OK</button>
