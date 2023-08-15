@@ -2,7 +2,6 @@ import { Routes, Link, Route, Router, Switch } from "react-router-dom";
 import Navbar from "./globalComponents/Navbar";
 // import Auth from "./auth/Auth";
 import { createContext, useState } from "react";
-import RandomNotesApp from "./RandomNotesApp";
 import SongNotesApp from "./SongNotesApp";
 import FreestyleApp from "./FreestyleApp";
 import StatsApp from "./StatsApp";
@@ -23,7 +22,6 @@ function App() {
         <Navbar />
 
         <Routes>
-          <Route path="/random-notes" element={<RandomNotesApp />} />
           <Route path="/songnotes" element={<SongNotesApp />} />
           <Route path="/freestyle" element={<FreestyleApp />} />
           <Route path="/" element={<FreestyleApp />} />
