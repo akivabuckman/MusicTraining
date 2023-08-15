@@ -225,8 +225,8 @@ const SongNotes = (props) => {
                 <button id="closePopupButton">OK</button>
             </div>
         </div>
-        <div class="infoPopup">
-            <div class="infoPopupContent">
+        <div className="infoPopup">
+            <div className="infoPopupContent">
                 <h3>Welcome to the Song Notes page!</h3>
                 <p>You pick the song you want to learn. We will show you the notes to play</p>
                 <p>You pick the key you'd like to play in. By default it'll be C</p>
