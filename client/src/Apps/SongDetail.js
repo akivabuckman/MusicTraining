@@ -40,6 +40,7 @@ const SongDetail = (props) => {
     const [songName, setSongName] = useState("");
     const [username, setUsername] = useState("");
     const [userId, setUserId] = useState("");
+    const [instrument, setInstrument] = useState("guitar")
     const { token } = useContext(AppContext);
     const { song_id } = useParams();
     
@@ -59,7 +60,7 @@ const SongDetail = (props) => {
          * 
          */
         const fetchSongDetails = async () => {
-            if (userId) {
+            if (userId === jwt_token(token).userid) {
                 try {
                     const response = await fetch(`/music/userSongs/${userId}/${song_id}`);
                     const data = await response.json();
@@ -124,7 +125,12 @@ const SongDetail = (props) => {
         
         for (let i in songData.notes_octaves) {
             setTimeout(() => {
-                const sound = require(`../musicComponents/sounds/piano/${songData.notes_octaves[i]}.mp3`);
+                let sound
+                if (instrument === "piano") {
+                    sound = require(`../musicComponents/sounds/piano/${songData.notes_octaves[i]}.mp3`);
+                } else {
+                    sound = require(`../musicComponents/sounds/guitar/${songData.notes_octaves[i]}.mp3`);
+                }
                 const audio = new Audio(sound)
                 audio.play();
             }, songData.user_times[i] - firstTime);
@@ -146,6 +152,14 @@ const SongDetail = (props) => {
           }
     }, [token]);
 
+    /**
+     * If user changes instrument, the instrument prop is set.
+     * @function handleInstrumentChange
+     * @param {object} event - Event object when user changes instrument.
+     */
+    const handleInstrumentChange = (event) => {
+        setInstrument(event.target.value.toLowerCase())
+    };
     return (
         <>
         <div>
@@ -157,8 +171,16 @@ const SongDetail = (props) => {
                 ))
             }
             </div>
-            <button onClick={deleteSong}>Delete Song</button>
-            <button onClick={playSong}>Play Song</button>
+            <div id="actions">
+                <p>Instrument: 
+                    <select onChange={handleInstrumentChange}>
+                        <option key="Guitar" value="Guitar">Guitar</option>
+                        <option key="Piano" value="Piano">Piano</option>
+                    </select>
+                </p>
+                <button onClick={playSong}>Play Song</button>
+                <button onClick={deleteSong}>Delete Song</button>
+            </div>
         </div>
         <div id="popupContainer" className="popup-container">
             <div className="popup">
