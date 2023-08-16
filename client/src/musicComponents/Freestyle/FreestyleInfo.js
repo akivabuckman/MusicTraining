@@ -147,11 +147,11 @@ const FreestyleInfo = (props) => {
             </div>
             <div id="data">
                 <p>Instrument: 
-                <select onChange={handleInstrumentChange}>
-                    <option key="Piano" value="Piano">Piano</option>
-                    <option key="Guitar" value="Guitar">Guitar</option>
-                </select>
-            </p>
+                    <select onChange={handleInstrumentChange}>
+                        <option key="Piano" value="Piano">Piano</option>
+                        <option key="Guitar" value="Guitar">Guitar</option>
+                    </select>
+                </p>
             {
                 props.instrument === "piano" ? 
                 <p>Lowest Note:
