@@ -6,7 +6,6 @@ import { verifyToken } from "../middlewares/VerifyToken.js";
 const mrouter = express.Router();
 mrouter.post("/songNotes", songNotesToDb);
 mrouter.post("/userSong", userSongToDb)
-// mrouter.get("/userSongs", getUserSongs);
 mrouter.get("/songNotes/:user_id", getUserSongNotes);
 mrouter.get("/userSongs/:user_id/:song_id", getUserSong);
 mrouter.get("/userSongs/:user_id", getAllUserSongs)
