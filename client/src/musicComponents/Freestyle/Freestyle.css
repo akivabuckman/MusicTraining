@@ -75,16 +75,6 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Optional: Add a subtle shadow */
 }
 
-.info-pane {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px; /* Adjust the spacing between elements as needed */
-  background-color: #f2f2f2; /* Set your preferred background color */
-  padding: 20px; /* Add padding for better spacing */
-  border-radius: 10px; /* Optional: Add rounded corners */
-}
 
 .info-pane p {
   margin: 0; /* Reset default margin */
@@ -110,13 +100,26 @@
 }
 
 #FreestyleInfoPaneDiv {
-  position: relative;
-  max-width: 800;
-  top: 0px;
+  max-width: 800px;
+  top: 40px;
   margin-top: 10px;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   text-align: center;
   justify-content: space-around;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px; /* Adjust the spacing between elements as needed */
+  background-color: #f2f2f2; /* Set your preferred background color */
+  padding: 20px; /* Add padding for better spacing */
+  border-radius: 10px; /* Optional: Add rounded corners */
+}
+
+#freestyleApp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

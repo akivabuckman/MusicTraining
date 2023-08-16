@@ -63,9 +63,7 @@ const FreestyleApp = (props) => {
       setNotesWithOctaves([]);
     }
     return (
-        <>
-        {/* <button onClick={log}>app log</button> */}
-            <div className="App">
+        <div id="freestyleApp">
         <FreestyleInfo 
             reset={reset}
             instrument={instrument} 
@@ -142,7 +140,6 @@ const FreestyleApp = (props) => {
     }
       </div>
         
-        </>
       
     );
   }
