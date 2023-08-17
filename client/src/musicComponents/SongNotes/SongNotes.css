@@ -101,7 +101,7 @@
 }
 
 
-.popup-container {
+.popup-container, .loading-container {
   display: none;
   position: fixed;
   top: 0;
@@ -112,7 +112,7 @@
   z-index: 1000;
 }
 
-.popup {
+.popup, .loading {
   background-color: white;
   padding: 20px;
   border-radius: 5px;

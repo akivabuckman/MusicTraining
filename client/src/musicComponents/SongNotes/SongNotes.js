@@ -87,6 +87,7 @@ const SongNotes = (props) => {
     const saveToDb = async () => {
       if (props.currentDegreeIndex === props.melodyDegrees.length) {
         if (userId !== "") {
+          document.querySelector("#loadingContainer").style.display = "block";
           try {
             const data = JSON.stringify({
               user_id: userId,
@@ -100,7 +101,7 @@ const SongNotes = (props) => {
               score: props.correctCount/props.melodyDegrees.length,
               instrument: props.instrument
             })
-            const res = await fetch("/music/songNotes", {
+              const res = await fetch("/music/songNotes", {
               method: "POST",
               headers: {"content-type": "application/json"},
               body: data,
@@ -110,6 +111,7 @@ const SongNotes = (props) => {
             console.log(error)
           }
         }
+        document.querySelector("#loadingContainer").style.display = "none";
         document.querySelector("#popupContainer").style.display = "block";
         document.querySelector("#closePopupButton").addEventListener("click", () => {
         document.querySelector("#popupContainer").style.display = "none"
@@ -223,6 +225,11 @@ const SongNotes = (props) => {
                 }
                 
                 <button id="closePopupButton">OK</button>
+            </div>
+        </div>
+        <div id="loadingContainer" className="loading-container">
+            <div className="loading">
+              <p>loading...</p>
             </div>
         </div>
         <div className="infoPopup">

@@ -49,13 +49,15 @@ const StatsApp = (props) => {
      * @fires setUserSongs
      */
     const fetchUserSongs = async () => {
-        try {
+      document.querySelector("#loadingContainer").style.display = "block";
+      try {
             const response = await fetch(`/music/userSongs/${userId}`);
             const data = await response.json();
             setUserSongs(data);
         } catch (error) {
             console.log(error);
         }
+        document.querySelector("#loadingContainer").style.display = "none";
     }
 
      /**
@@ -66,6 +68,7 @@ const StatsApp = (props) => {
      * @fires setSongNotesData
      */
     const fetchSongNotes = async () => {
+      document.querySelector("#loadingContainer").style.display = "block";
         try {
             const response = await fetch(`/music/songNotes/${userId}`);
             const data = await response.json();
@@ -73,6 +76,7 @@ const StatsApp = (props) => {
         } catch (error) {
             console.log(error)
         }
+        document.querySelector("#loadingContainer").style.display = "none";
     }
 
     /**
@@ -358,6 +362,11 @@ const StatsApp = (props) => {
               
           }
           
+        </div>
+        <div id="loadingContainer" className="loading-container">
+            <div className="loading">
+              <p>loading...</p>
+            </div>
         </div>
         </div>
         </>
