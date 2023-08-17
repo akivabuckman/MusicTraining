@@ -21,7 +21,7 @@
     height: 100vh;
 }
 
-.App, .songNotesApp, #loginDiv {
+.App, #loginDiv {
     display: flex;
     flex-direction: column;
     min-height: 90%;

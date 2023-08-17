@@ -6,7 +6,6 @@
 .songNotesApp {
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
   justify-content: space-around;
   align-items: center;
   background-color: darkgrey;
@@ -45,8 +44,7 @@
 }
 
 #SongNotesInfoPaneDiv {
-  position: relative;
-  top: 0px;
+  top: 40px;
   margin-top: 10px;
   display: flex;
   flex-direction: column;
