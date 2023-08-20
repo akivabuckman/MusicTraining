@@ -174,7 +174,7 @@ const GuitarNeck = (props) => {
                 <div className="fret">
                     <div className="fretText flat" octave="4" style={{backgroundColor: `rgb${props.colors["Gb"]}`}}>
                         <p>Gb</p>
-                        <p>(33)</p>    
+                        <p>(3)</p>    
                     </div>
                 </div>
                 <div className="fret">
