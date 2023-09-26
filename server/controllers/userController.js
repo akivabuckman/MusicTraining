@@ -17,9 +17,7 @@ export const _users = async (req, res) => {
 
 export const _login = async (req, res) => {
   try {
-    console.log(req.body)
     const row = await login(req.body.username.toLowerCase());
-    console.log("row", row)
     if (row.length === 0)
       return res.status(404).json({ msg: "Username not found" });
 
